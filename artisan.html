@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Artisan Portal - Egytopia</title>
+    <link rel="stylesheet" href="artisan.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+</head>
+<body>
+<!-- Navigation Bar -->
+<header class="header">
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <a href="EgyHome.html" class="logo">EGY<span>TOPIA</span></a>
+            </div>
+            
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="EgyHome.html" class="nav-link">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a href="collection.html" class="nav-link">Collections</a>
+                </li>
+                <li class="nav-item">
+                    <a href="categories.html" class="nav-link">Categories</a>
+                </li>
+                <li class="nav-item">
+                    <a href="artisan.html" class="nav-link active">Artisan Portal</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">Our Story</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">Contact</a>
+                </li>
+            </ul>
+            
+            <div class="nav-toggle">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+        </div>
+    </nav>
+</header>
+
+<!-- Auth Section (shown when not logged in) -->
+<section class="auth-section" id="authSection">
+    <div class="auth-container">
+        <div class="auth-content">
+            <h1 class="auth-title">Join Our Community of Artisans</h1>
+            <p class="auth-subtitle">Share your unique Egyptian crafts with the world. Join Egytopia's artisan community to showcase and sell your authentic handmade products.</p>
+            
+            <div class="auth-features">
+                <div class="feature-item" id="showcaseFeature">
+                    <div class="feature-icon">
+                        <i class="fas fa-store"></i>
+                    </div>
+                    <div>
+                        <h3>Showcase Your Products</h3>
+                        <p>Display your crafts to a global audience</p>
+                    </div>
+                </div>
+                <div class="feature-item" id="earnFeature">
+                    <div class="feature-icon">
+                        <i class="fas fa-hand-holding-usd"></i>
+                    </div>
+                    <div>
+                        <h3>Earn From Your Craft</h3>
+                        <p>Get fair compensation for your work</p>
+                    </div>
+                </div>
+                <div class="feature-item" id="communityFeature">
+                    <div class="feature-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div>
+                        <h3>Join a Community</h3>
+                        <p>Connect with fellow Egyptian artisans</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="auth-form-container">
+            <h2 class="form-title" id="formTitle">Welcome Back</h2>
+            <p class="form-subtitle" id="formSubtitle">Sign in to your artisan account</p>
+            
+            <div class="auth-tabs">
+                <div class="auth-tab active" data-tab="signin">Sign In</div>
+                <div class="auth-tab" data-tab="signup">Sign Up</div>
+            </div>
+            
+            <form class="auth-form active" id="signinForm">
+                <div class="form-group">
+                    <label for="signinEmail">Email Address</label>
+                    <input type="email" id="signinEmail" class="form-control" placeholder="Enter your email" required>
+                </div>
+                <div class="form-group">
+                    <label for="signinPassword">Password</label>
+                    <input type="password" id="signinPassword" class="form-control" placeholder="Enter your password" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Sign In</button>
+                <div class="switch-auth">
+                    Don't have an account? <a id="switchToSignup">Sign up here</a>
+                </div>
+            </form>
+            
+            <form class="auth-form" id="signupForm">
+                <div class="form-group">
+                    <label for="signupName">Full Name</label>
+                    <input type="text" id="signupName" class="form-control" placeholder="Enter your full name" required>
+                </div>
+                <div class="form-group">
+                    <label for="signupEmail">Email Address</label>
+                    <input type="email" id="signupEmail" class="form-control" placeholder="Enter your email" required>
+                </div>
+                <div class="form-group">
+                    <label for="signupPassword">Password</label>
+                    <input type="password" id="signupPassword" class="form-control" placeholder="Create a password" required>
+                </div>
+                <div class="form-group">
+                    <label for="signupConfirmPassword">Confirm Password</label>
+                    <input type="password" id="signupConfirmPassword" class="form-control" placeholder="Confirm your password" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Create Account</button>
+                <div class="switch-auth">
+                    Already have an account? <a id="switchToSignin">Sign in here</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+
+<!-- Profile Section (shown when logged in) -->
+<section class="profile-section" id="profileSection" style="display: none;">
+    <div class="profile-container">
+        <div class="profile-header">
+            <h1 class="profile-title">Artisan Dashboard</h1>
+            <p class="profile-subtitle">Manage your products and profile</p>
+        </div>
+        
+        <div class="profile-content">
+            <div class="profile-sidebar">
+                <div class="profile-info">
+                    <div class="profile-avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <h2 class="profile-name" id="profileName">Artisan Name</h2>
+                    <p class="profile-email" id="profileEmail">artisan@example.com</p>
+                </div>
+                
+                <div class="profile-stats">
+                    <div class="stat-item">
+                        <div class="stat-number" id="productsCount">0</div>
+                        <div class="stat-label">Products</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">0</div>
+                        <div class="stat-label">Sales</div>
+                    </div>
+                </div>
+                
+                <div class="profile-actions">
+                    <button class="btn btn-primary" id="addProductBtn">Add New Product</button>
+                    <button class="btn btn-secondary" id="logoutBtn">Log Out</button>
+                </div>
+            </div>
+            
+            <div class="profile-main">
+                <h2 class="section-title">My Products</h2>
+                
+                <div class="products-grid" id="artisanProducts">
+                    <!-- Products will be dynamically added here -->
+                </div>
+                
+                <div id="noProductsMessage" style="text-align: center; padding: 40px; color: #666;">
+                    <i class="fas fa-box-open" style="font-size: 48px; margin-bottom: 20px; opacity: 0.5;"></i>
+                    <h3>No Products Yet</h3>
+                    <p>Start by adding your first product to showcase your craft.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Add/Edit Product Modal -->
+<div class="modal-overlay" id="productModal">
+    <div class="modal">
+        <button class="close-modal" id="closeProductModal">&times;</button>
+        <div class="modal-header">
+            <h2 class="modal-title" id="modalTitle">Add New Product</h2>
+        </div>
+        <div class="modal-body">
+            <form id="productForm">
+                <div class="form-group">
+                    <label for="productImage">Product Image</label>
+                    <div class="image-upload">
+                        <div class="image-preview" id="imagePreview">
+                            <div class="image-placeholder">
+                                <i class="fas fa-image" style="font-size: 48px; margin-bottom: 10px;"></i>
+                                <p>No image selected</p>
+                            </div>
+                        </div>
+                        <input type="file" id="productImage" accept="image/*" style="display: none;">
+                        <button type="button" class="image-upload-btn" id="uploadImageBtn">Choose Image</button>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="productName">Product Name</label>
+                    <input type="text" id="productName" class="form-control" placeholder="Enter product name" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="productPrice">Price (EGP)</label>
+                    <input type="number" id="productPrice" class="form-control" placeholder="Enter price in EGP" min="0" step="0.01" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="productDescription">Description</label>
+                    <textarea id="productDescription" class="form-control" rows="4" placeholder="Enter product description" required></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="productCategory">Category</label>
+                    <select id="productCategory" class="form-control" required>
+                        <option value="">Select a category</option>
+                        <option value="jewelry">Jewelry</option>
+                        <option value="art">Art</option>
+                        <option value="textiles">Textiles</option>
+                        <option value="sculptures">Sculptures</option>
+                        <option value="home-decor">Home Decor</option>
+                        <option value="traditional-crafts">Traditional Crafts</option>
+                        <option value="agricultural">Agricultural Products</option>
+                        <option value="handmade">Handmade Goods</option>
+                    </select>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-secondary" id="cancelProductBtn">Cancel</button>
+            <button class="btn btn-primary" id="saveProductBtn">Add Product</button>
+        </div>
+    </div>
+</div>
+
+<script src="artisan.js"></script>
+</body>
+</html>
