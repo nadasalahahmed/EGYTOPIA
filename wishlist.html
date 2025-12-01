@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wishlist - Egytopia</title>
+    <link rel="stylesheet" href="EGYHome.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .wishlist-container {
+            margin-top: 100px;
+            padding: 40px 20px;
+            min-height: 60vh;
+        }
+        
+        .wishlist-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .wishlist-header h1 {
+            color: #c19b53;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .wishlist-content {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        
+        .wishlist-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        .wishlist-item {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+            position: relative;
+        }
+        
+        .wishlist-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        }
+        
+        .wishlist-item-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+        
+        .wishlist-item-details {
+            padding: 20px;
+        }
+        
+        .wishlist-item-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        
+        .wishlist-item-price {
+            color: #c19b53;
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+        }
+        
+        .wishlist-item-actions {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 2px;
+        }
+        
+        .btn-small {
+            padding: 8px 15px;
+            font-size: 0.9rem;
+            flex: 1;
+        }
+        
+        .remove-wishlist {
+            background: none;
+            border: 1px solid #e74c3c;
+            color: #e74c3c;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .remove-wishlist:hover {
+            background: #e74c3c;
+            color: white;
+        }
+        
+        .empty-wishlist {
+            text-align: center;
+            padding: 60px 20px;
+        }
+        
+        .empty-wishlist i {
+            font-size: 4rem;
+            color: #ddd;
+            margin-bottom: 20px;
+        }
+        
+        .empty-wishlist h3 {
+            color: #666;
+            margin-bottom: 20px;
+        }
+        
+        .wishlist-heart {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            color: #c19b53;
+        }
+        
+        .wishlist-heart.active {
+            background: #c19b53;
+            color: white;
+        }
+        
+        @media (max-width: 768px) {
+            .wishlist-grid {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+                gap: 20px;
+            }
+            
+            .wishlist-item-actions {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <header class="header">
+        <nav class="navbar">
+            <div class="nav-container">
+                <div class="nav-logo">
+                    <a href="EgyHome.html" class="logo">EGY<span>TOPIA</span></a>
+                </div>
+                
+                <ul class="nav-menu">
+                    <li class="nav-item">
+                        <a href="EgyHome.html" class="nav-link">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="collection.html" class="nav-link">Collections</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="categories.html" class="nav-link">Categories</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="artisan.html" class="nav-link">Artisan Portal</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="our-story.html" class="nav-link">Our Story</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="contact.html" class="nav-link">Contact</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="cart.html" class="nav-link">
+                            <i class="fas fa-shopping-cart"></i>
+                            <span class="cart-count">0</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="wishlist.html" class="nav-link active">
+                            <i class="fas fa-heart"></i>
+                            <span class="wishlist-count">0</span>
+                        </a>
+                    </li>
+                </ul>
+                
+                <div class="nav-toggle">
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Wishlist Content -->
+    <div class="wishlist-container">
+        <div class="wishlist-content">
+            <div class="wishlist-header">
+                <h1>Your Wishlist</h1>
+                <p>Save your favorite items for later</p>
+            </div>
+            
+            <div id="wishlist-items-container">
+                <!-- Wishlist items will be dynamically loaded here -->
+                <div class="empty-wishlist">
+                    <i class="fas fa-heart"></i>
+                    <h3>Your wishlist is empty</h3>
+                    <p>Start adding items you love to your wishlist!</p>
+                    <a href="EgyHome.html" class="btn btn-primary">Explore Products</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="shared.js"></script>
+    <script src="EGYHome.js"></script>
+
+<script>
+    // Wishlist page specific functionality
+    document.addEventListener('DOMContentLoaded', function() {
+        loadWishlistPage();
+        setupWishlistPageEvents();
+    });
+
+    function loadWishlistPage() {
+        // Use shared manager to get wishlist items
+        const wishlistItems = window.cartManager.getWishlistItems();
+        const container = document.getElementById('wishlist-items-container');
+        
+        if (wishlistItems.length === 0) {
+            container.innerHTML = `
+                <div class="empty-wishlist">
+                    <i class="fas fa-heart"></i>
+                    <h3>Your wishlist is empty</h3>
+                    <p>Start adding items you love to your wishlist!</p>
+                    <a href="EgyHome.html" class="btn btn-primary">Explore Products</a>
+                </div>
+            `;
+            return;
+        }
+        
+        container.innerHTML = `
+            <div class="wishlist-grid">
+                ${wishlistItems.map(item => `
+                    <div class="wishlist-item" data-id="${item.id}">
+                        <img src="${item.image}" alt="${item.title}" class="wishlist-item-image">
+                        <button class="wishlist-heart active">
+                            <i class="fas fa-heart"></i>
+                        </button>
+                        <div class="wishlist-item-details">
+                            <h3 class="wishlist-item-title">${item.title}</h3>
+                            <div class="wishlist-item-price">${item.price}</div>
+                            <div class="wishlist-item-actions">
+                                <button class="btn btn-primary btn-small add-to-cart-from-wishlist">Add to Cart</button>
+                                <button class="btn btn-secondary btn-small remove-wishlist">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `).join('')}
+            </div>
+        `;
+    }
+
+    function setupWishlistPageEvents() {
+        // Delegate events for dynamic content
+        document.getElementById('wishlist-items-container').addEventListener('click', function(e) {
+            const wishlistItem = e.target.closest('.wishlist-item');
+            if (!wishlistItem) return;
+            
+            const itemId = parseInt(wishlistItem.dataset.id);
+            
+            if (e.target.classList.contains('remove-wishlist') || e.target.closest('.remove-wishlist')) {
+                removeFromWishlist(itemId);
+            } else if (e.target.classList.contains('add-to-cart-from-wishlist') || e.target.closest('.add-to-cart-from-wishlist')) {
+                addToCartFromWishlist(itemId);
+            } else if (e.target.classList.contains('wishlist-heart') || e.target.closest('.wishlist-heart')) {
+                removeFromWishlist(itemId);
+            }
+        });
+    }
+
+    function removeFromWishlist(itemId) {
+        // Use shared manager to remove from wishlist
+        window.cartManager.toggleWishlist({id: itemId});
+        loadWishlistPage();
+        // No need to manually update counts - shared manager does it automatically
+    }
+
+    function addToCartFromWishlist(itemId) {
+        // Get wishlist items from shared manager
+        const wishlistItems = window.cartManager.getWishlistItems();
+        
+        const item = wishlistItems.find(item => item.id === itemId);
+        
+        if (item) {
+            // Use shared manager to add to cart
+            window.cartManager.addToCart(item);
+            alert('Item added to cart!');
+        }
+    }
+</script>
+</body>
+</html>
