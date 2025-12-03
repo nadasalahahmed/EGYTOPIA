@@ -1,0 +1,1093 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopping Cart - Egytopia</title>
+    <link rel="stylesheet" href="EGYHome.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .cart-container {
+            margin-top: 100px;
+            padding: 40px 20px;
+            min-height: 60vh;
+        }
+        
+        .cart-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .cart-header h1 {
+            color: #c19b53;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .cart-content {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        
+        .cart-items {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+            overflow: hidden;
+        }
+        
+        .cart-item {
+            display: flex;
+            align-items: center;
+            padding: 20px;
+            border-bottom: 1px solid #f0f0f0;
+            transition: background-color 0.3s ease;
+        }
+        
+        .cart-item:hover {
+            background-color: #f9f9f9;
+        }
+        
+        .cart-item:last-child {
+            border-bottom: none;
+        }
+        
+        .cart-item-image {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-right: 20px;
+        }
+        
+        .cart-item-details {
+            flex: 1;
+        }
+        
+        .cart-item-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        
+        .cart-item-price {
+            color: #c19b53;
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+        
+        .cart-item-quantity {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 10px 0;
+        }
+        
+        .quantity-btn {
+            width: 30px;
+            height: 30px;
+            border: 1px solid #ddd;
+            background: white;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+        
+        .quantity-btn:hover {
+            background: #c19b53;
+            color: white;
+            border-color: #c19b53;
+        }
+        
+        .quantity-display {
+            min-width: 40px;
+            text-align: center;
+            font-weight: 600;
+        }
+        
+        .remove-item {
+            background: none;
+            border: none;
+            color: #e74c3c;
+            cursor: pointer;
+            padding: 5px 10px;
+            border-radius: 4px;
+            transition: background-color 0.3s ease;
+        }
+        
+        .remove-item:hover {
+            background: #e74c3c;
+            color: white;
+        }
+        
+        .cart-summary {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            padding: 30px;
+        }
+        
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        .summary-total {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #c19b53;
+        }
+        
+        .cart-actions {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+        
+        .empty-cart {
+            text-align: center;
+            padding: 60px 20px;
+        }
+        
+        .empty-cart i {
+            font-size: 4rem;
+            color: #ddd;
+            margin-bottom: 20px;
+        }
+        
+        .empty-cart h3 {
+            color: #666;
+            margin-bottom: 20px;
+        }
+        
+        .continue-shopping {
+            display: inline-block;
+            margin-top: 20px;
+            text-decoration: none;
+            color: #c19b53;
+            font-weight: 600;
+        }
+        
+        .continue-shopping:hover {
+            text-decoration: underline;
+        }
+        
+        /* Checkout Modal Styles */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            overflow-y: auto;
+            padding: 20px;
+        }
+        
+        .modal-overlay.active {
+            display: flex;
+        }
+        
+        .checkout-modal {
+            background: white;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            animation: modalSlideIn 0.3s ease;
+        }
+        
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .modal-header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        
+        .modal-header h2 {
+            color: #c19b53;
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+        }
+        
+        .modal-header p {
+            color: #666;
+        }
+        
+        .payment-methods {
+            margin-bottom: 25px;
+        }
+        
+        .payment-method {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            border: 2px solid #eee;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .payment-method:hover {
+            border-color: #c19b53;
+        }
+        
+        .payment-method.selected {
+            border-color: #c19b53;
+            background-color: rgba(193, 155, 83, 0.05);
+        }
+        
+        .payment-icon {
+            width: 40px;
+            height: 40px;
+            background: #f5f5f5;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            color: #c19b53;
+            font-size: 1.2rem;
+        }
+        
+        .payment-info h4 {
+            margin: 0 0 5px 0;
+            color: #333;
+        }
+        
+        .payment-info p {
+            margin: 0;
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        /* Contact and Address Form */
+        .contact-form {
+            display: none;
+            margin-top: 25px;
+            padding-top: 25px;
+            border-top: 1px solid #eee;
+        }
+        
+        .contact-form.active {
+            display: block;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+        
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #c19b53;
+        }
+        
+        .form-row {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .form-row .form-group {
+            flex: 1;
+            margin-bottom: 0;
+        }
+        
+        .required::after {
+            content: " *";
+            color: #e74c3c;
+        }
+        
+        .form-note {
+            font-size: 0.85rem;
+            color: #666;
+            margin-top: 5px;
+        }
+        
+        .payment-specific-info {
+            background: #f9f9f9;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 10px;
+            font-size: 0.9rem;
+            color: #666;
+        }
+        
+        .modal-actions {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+        
+        .modal-actions .btn {
+            flex: 1;
+            padding: 12px;
+        }
+        
+        /* Success Modal */
+        .success-modal .modal-header i {
+            font-size: 4rem;
+            color: #2ecc71;
+            margin-bottom: 20px;
+        }
+        
+        .success-modal .modal-header h2 {
+            color: #27ae60;
+        }
+        
+        .order-details {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            text-align: left;
+        }
+        
+        .order-details h4 {
+            color: #333;
+            margin-bottom: 15px;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 10px;
+        }
+        
+        .order-details p {
+            margin: 8px 0;
+            color: #555;
+        }
+        
+        @media (max-width: 768px) {
+            .cart-item-quantity {
+                margin-left: 27px;
+            }
+
+            .cart-item {
+                flex-direction: column;
+                text-align: center;
+                gap: 15px;
+            }
+            
+            .cart-item-image {
+                margin-right: 0;
+            }
+            
+            .cart-actions {
+                flex-direction: column;
+            }
+            
+            .modal-actions {
+                flex-direction: column;
+            }
+            
+            .checkout-modal {
+                padding: 20px;
+                width: 95%;
+            }
+            
+            .form-row {
+                flex-direction: column;
+                gap: 0;
+            }
+            
+            .form-row .form-group {
+                margin-bottom: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <header class="header">
+        <nav class="navbar">
+            <div class="nav-container">
+                <div class="nav-logo">
+                    <a href="EgyHome.html" class="logo">EGY<span>TOPIA</span></a>
+                </div>
+                
+                <ul class="nav-menu">
+                    <li class="nav-item">
+                        <a href="EgyHome.html" class="nav-link">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="collection.html" class="nav-link">Collections</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="categories.html" class="nav-link">Categories</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="artisan.html" class="nav-link">User Portal</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="our-story.html" class="nav-link">Our Story</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="contact.html" class="nav-link">Contact</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="cart.html" class="nav-link active">
+                            <i class="fas fa-shopping-cart"></i>
+                            <span class="cart-count">0</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="wishlist.html" class="nav-link">
+                            <i class="fas fa-heart"></i>
+                            <span class="wishlist-count">0</span>
+                        </a>
+                    </li>
+                </ul>
+                
+                <div class="nav-toggle">
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Cart Content -->
+    <div class="cart-container">
+        <div class="cart-content">
+            <div class="cart-header">
+                <h1>Your Shopping Cart</h1>
+                <p>Review your selected items</p>
+            </div>
+            
+            <div id="cart-items-container">
+                <!-- Cart items will be dynamically loaded here -->
+                <div class="empty-cart">
+                    <i class="fas fa-shopping-cart"></i>
+                    <h3>Your cart is empty</h3>
+                    <p>Browse our collections and add some beautiful Egyptian treasures!</p>
+                    <a href="EgyHome.html" class="btn btn-primary">Continue Shopping</a>
+                </div>
+            </div>
+            
+            <div id="cart-summary-container" style="display: none;">
+                <div class="cart-summary">
+                    <div class="summary-row">
+                        <span>Subtotal:</span>
+                        <span id="subtotal">0 EGP</span>
+                    </div>
+                    <div class="summary-row">
+                        <span>Shipping:</span>
+                        <span id="shipping">50 EGP</span>
+                    </div>
+                    <div class="summary-row">
+                        <span>Tax:</span>
+                        <span id="tax">0 EGP</span>
+                    </div>
+                    <div class="summary-row summary-total">
+                        <span>Total:</span>
+                        <span id="total">0 EGP</span>
+                    </div>
+                    
+                    <div class="cart-actions">
+                        <a href="EgyHome.html" class="btn btn-secondary" style="flex: 1;">Continue Shopping</a>
+                        <button class="btn btn-primary" style="flex: 2;" id="checkout-btn">Proceed to Checkout</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Checkout Modal -->
+    <div class="modal-overlay" id="checkoutModal">
+        <div class="checkout-modal">
+            <div class="modal-header">
+                <h2>Checkout Details</h2>
+                <p>Complete your order by providing the required information</p>
+            </div>
+            
+            <div class="payment-methods">
+                <div class="payment-method" data-method="credit-card">
+                    <div class="payment-icon">
+                        <i class="fas fa-credit-card"></i>
+                    </div>
+                    <div class="payment-info">
+                        <h4>Credit/Debit Card</h4>
+                        <p>Pay securely with your card</p>
+                    </div>
+                </div>
+                
+                <div class="payment-method" data-method="cash">
+                    <div class="payment-icon">
+                        <i class="fas fa-money-bill-wave"></i>
+                    </div>
+                    <div class="payment-info">
+                        <h4>Cash on Delivery</h4>
+                        <p>Pay when you receive your order</p>
+                    </div>
+                </div>
+                
+                <div class="payment-method" data-method="paypal">
+                    <div class="payment-icon">
+                        <i class="fab fa-paypal"></i>
+                    </div>
+                    <div class="payment-info">
+                        <h4>PayPal</h4>
+                        <p>Pay with your PayPal account</p>
+                    </div>
+                </div>
+                
+                <div class="payment-method" data-method="vodafone-cash">
+                    <div class="payment-icon">
+                        <i class="fas fa-mobile-alt"></i>
+                    </div>
+                    <div class="payment-info">
+                        <h4>Vodafone Cash</h4>
+                        <p>Pay using Vodafone Cash wallet</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Contact and Address Form -->
+            <div class="contact-form" id="contactForm">
+                <h3 style="margin-bottom: 20px; color: #c19b53;">Contact & Shipping Information</h3>
+                
+                <form id="checkoutForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="fullName" class="required">Full Name</label>
+                            <input type="text" id="fullName" name="fullName" required placeholder="Enter your full name">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="phone" class="required">Phone Number</label>
+                            <input type="tel" id="phone" name="phone" required placeholder="e.g., +201234567890">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="email" class="required">Email Address</label>
+                        <input type="email" id="email" name="email" required placeholder="your@email.com">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="address" class="required">Shipping Address</label>
+                        <textarea id="address" name="address" rows="3" required placeholder="Enter your complete shipping address"></textarea>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="city" class="required">City</label>
+                            <input type="text" id="city" name="city" required placeholder="e.g., Cairo">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="zipCode" class="required">ZIP/Postal Code</label>
+                            <input type="text" id="zipCode" name="zipCode" required placeholder="Postal code">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="country" class="required">Country</label>
+                        <select id="country" name="country" required>
+                            <option value="">Select Country</option>
+                            <option value="Egypt" selected>Egypt</option>
+                            <option value="Saudi Arabia">Saudi Arabia</option>
+                            <option value="UAE">United Arab Emirates</option>
+                            <option value="USA">United States</option>
+                            <option value="UK">United Kingdom</option>
+                            <option value="Germany">Germany</option>
+                            <option value="France">France</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="specialInstructions">Special Delivery Instructions (Optional)</label>
+                        <textarea id="specialInstructions" name="specialInstructions" rows="2" placeholder="Any special instructions for delivery"></textarea>
+                    </div>
+                    
+                    <!-- Payment Specific Information -->
+                    <div id="paymentSpecificInfo" class="payment-specific-info" style="display: none;">
+                        <!-- Will be dynamically filled based on payment method -->
+                    </div>
+                </form>
+            </div>
+            
+            <div class="modal-actions">
+                <button class="btn btn-secondary" id="cancel-btn">Cancel</button>
+                <button class="btn btn-primary" id="next-btn" style="display: none;">Next</button>
+                <button class="btn btn-primary" id="confirm-payment-btn" style="display: none;">Confirm Order</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Modal -->
+    <div class="modal-overlay" id="successModal">
+        <div class="checkout-modal success-modal">
+            <div class="modal-header">
+                <i class="fas fa-check-circle"></i>
+                <h2>Order Confirmed!</h2>
+                <p>Your order has been placed successfully.</p>
+                
+                <div class="order-details" id="orderDetails">
+                    <!-- Order details will be inserted here -->
+                </div>
+            </div>
+            
+            <div class="modal-actions">
+                <button class="btn btn-primary" id="continue-shopping-btn">Continue Shopping</button>
+                <button class="btn btn-secondary" id="print-receipt-btn">Print Receipt</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="shared.js"></script>
+    <script src="EGYHome.js"></script>
+
+ <script>
+    // Cart page specific functionality
+    document.addEventListener('DOMContentLoaded', function() {
+        loadCartPage();
+        setupCartPageEvents();
+        setupCheckoutModal();
+    });
+
+    function loadCartPage() {
+        // Use shared manager to get cart items
+        const cartItems = window.cartManager.getCartItems();
+        const cartContainer = document.getElementById('cart-items-container');
+        const summaryContainer = document.getElementById('cart-summary-container');
+        
+        if (cartItems.length === 0) {
+            cartContainer.innerHTML = `
+                <div class="empty-cart">
+                    <i class="fas fa-shopping-cart"></i>
+                    <h3>Your cart is empty</h3>
+                    <p>Browse our collections and add some beautiful Egyptian treasures!</p>
+                    <a href="EgyHome.html" class="btn btn-primary">Continue Shopping</a>
+                </div>
+            `;
+            summaryContainer.style.display = 'none';
+            return;
+        }
+        
+        // Display cart items
+        cartContainer.innerHTML = `
+            <div class="cart-items">
+                ${cartItems.map(item => `
+                    <div class="cart-item" data-id="${item.id}">
+                        <img src="${item.image}" alt="${item.title}" class="cart-item-image">
+                        <div class="cart-item-details">
+                            <h3 class="cart-item-title">${item.title}</h3>
+                            <div class="cart-item-price">${item.price}</div>
+                            <div class="cart-item-quantity">
+                                <button class="quantity-btn minus">-</button>
+                                <span class="quantity-display">${item.quantity}</span>
+                                <button class="quantity-btn plus">+</button>
+                            </div>
+                        </div>
+                        <button class="remove-item">Remove</button>
+                    </div>
+                `).join('')}
+            </div>
+        `;
+        
+        summaryContainer.style.display = 'block';
+        updateCartSummary();
+    }
+
+    function setupCartPageEvents() {
+        // Delegate events for dynamic content
+        document.getElementById('cart-items-container').addEventListener('click', function(e) {
+            const cartItem = e.target.closest('.cart-item');
+            if (!cartItem) return;
+            
+            const itemId = parseInt(cartItem.dataset.id);
+            
+            if (e.target.classList.contains('remove-item')) {
+                removeFromCart(itemId);
+            } else if (e.target.classList.contains('plus')) {
+                updateQuantity(itemId, 1);
+            } else if (e.target.classList.contains('minus')) {
+                updateQuantity(itemId, -1);
+            }
+        });
+    }
+
+    function setupCheckoutModal() {
+        const checkoutBtn = document.getElementById('checkout-btn');
+        const checkoutModal = document.getElementById('checkoutModal');
+        const successModal = document.getElementById('successModal');
+        const cancelBtn = document.getElementById('cancel-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const confirmPaymentBtn = document.getElementById('confirm-payment-btn');
+        const continueShoppingBtn = document.getElementById('continue-shopping-btn');
+        const printReceiptBtn = document.getElementById('print-receipt-btn');
+        const paymentMethods = document.querySelectorAll('.payment-method');
+        const contactForm = document.getElementById('contactForm');
+        const paymentSpecificInfo = document.getElementById('paymentSpecificInfo');
+        const checkoutForm = document.getElementById('checkoutForm');
+        
+        let selectedPaymentMethod = null;
+        let currentStep = 'payment'; // 'payment' or 'contact'
+        
+        // Payment method selection
+        paymentMethods.forEach(method => {
+            method.addEventListener('click', function() {
+                // Remove selected class from all methods
+                paymentMethods.forEach(m => m.classList.remove('selected'));
+                // Add selected class to clicked method
+                this.classList.add('selected');
+                selectedPaymentMethod = this.dataset.method;
+                
+                // Show payment specific information
+                showPaymentSpecificInfo(selectedPaymentMethod);
+                
+                // Show next button
+                nextBtn.style.display = 'block';
+                confirmPaymentBtn.style.display = 'none';
+            });
+        });
+        
+        // Show payment method specific information
+        function showPaymentSpecificInfo(method) {
+            paymentSpecificInfo.style.display = 'block';
+            
+            const infoMap = {
+                'credit-card': `
+                    <strong><i class="fas fa-credit-card"></i> Credit/Debit Card Payment</strong>
+                    <p>You will be redirected to our secure payment gateway to complete your card payment.</p>
+                    <p>We accept Visa, MasterCard, and American Express.</p>
+                `,
+                'cash': `
+                    <strong><i class="fas fa-money-bill-wave"></i> Cash on Delivery</strong>
+                    <p>Please prepare exact cash for the delivery person. Our delivery executive will contact you 30 minutes before arrival.</p>
+                    <p>Note: A 10 EGP extra charge applies for COD orders.</p>
+                `,
+                'paypal': `
+                    <strong><i class="fab fa-paypal"></i> PayPal Payment</strong>
+                    <p>You will be redirected to PayPal to complete your payment securely.</p>
+                    <p>Ensure your PayPal account has sufficient balance or linked payment method.</p>
+                `,
+                'vodafone-cash': `
+                    <strong><i class="fas fa-mobile-alt"></i> Vodafone Cash Payment</strong>
+                    <p>Please send the payment to our Vodafone Cash number: <strong>0100 123 4567</strong></p>
+                    <p>Include your order number in the payment note. Our team will verify within 15 minutes.</p>
+                `
+            };
+            
+            paymentSpecificInfo.innerHTML = infoMap[method] || '';
+        }
+        
+        // Open checkout modal
+        if (checkoutBtn) {
+            checkoutBtn.addEventListener('click', function() {
+                const cartItems = window.cartManager.getCartItems();
+                if (cartItems.length === 0) {
+                    alert('Your cart is empty!');
+                    return;
+                }
+                
+                // Reset form
+                resetCheckoutForm();
+                currentStep = 'payment';
+                updateModalButtons();
+                
+                checkoutModal.classList.add('active');
+                document.body.style.overflow = 'hidden'; // Prevent scrolling
+            });
+        }
+        
+        // Reset checkout form
+        function resetCheckoutForm() {
+            checkoutForm.reset();
+            paymentMethods.forEach(m => m.classList.remove('selected'));
+            selectedPaymentMethod = null;
+            contactForm.classList.remove('active');
+            paymentSpecificInfo.style.display = 'none';
+            document.body.style.overflow = ''; // Re-enable scrolling
+        }
+        
+        // Update modal buttons based on current step
+        function updateModalButtons() {
+            if (currentStep === 'payment') {
+                nextBtn.style.display = selectedPaymentMethod ? 'block' : 'none';
+                confirmPaymentBtn.style.display = 'none';
+            } else {
+                nextBtn.style.display = 'none';
+                confirmPaymentBtn.style.display = 'block';
+            }
+        }
+        
+        // Next button - go to contact form
+        if (nextBtn) {
+            nextBtn.addEventListener('click', function() {
+                if (!selectedPaymentMethod) {
+                    alert('Please select a payment method first');
+                    return;
+                }
+                
+                currentStep = 'contact';
+                contactForm.classList.add('active');
+                updateModalButtons();
+                
+                // Scroll to form
+                setTimeout(() => {
+                    contactForm.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }, 100);
+            });
+        }
+        
+        // Cancel button
+        if (cancelBtn) {
+            cancelBtn.addEventListener('click', function() {
+                checkoutModal.classList.remove('active');
+                resetCheckoutForm();
+                currentStep = 'payment';
+            });
+        }
+        
+        // Confirm payment/order
+        if (confirmPaymentBtn) {
+            confirmPaymentBtn.addEventListener('click', function() {
+                // Validate form
+                if (!validateCheckoutForm()) {
+                    return;
+                }
+                
+                // Get form data
+                const formData = new FormData(checkoutForm);
+                const orderData = {
+                    paymentMethod: selectedPaymentMethod,
+                    customerInfo: {
+                        fullName: formData.get('fullName'),
+                        phone: formData.get('phone'),
+                        email: formData.get('email'),
+                        address: formData.get('address'),
+                        city: formData.get('city'),
+                        zipCode: formData.get('zipCode'),
+                        country: formData.get('country'),
+                        specialInstructions: formData.get('specialInstructions')
+                    },
+                    cart: window.cartManager.getCartItems(),
+                    orderDate: new Date().toLocaleString()
+                };
+                
+                // Calculate totals
+                const subtotal = window.cartManager.getCartTotal();
+                const shipping = selectedPaymentMethod === 'cash' ? 60 : 50; // Extra 10 for COD
+                const tax = subtotal * 0.14;
+                const total = subtotal + shipping + tax;
+                
+                // Generate order number
+                const orderNumber = 'EGY-' + Date.now().toString().slice(-8);
+                
+                // Display success modal with order details
+                showSuccessModal(orderData, orderNumber, total, shipping);
+                
+                // Close checkout modal
+                checkoutModal.classList.remove('active');
+                resetCheckoutForm();
+                
+                // Clear the cart
+                window.cartManager.clearCart();
+                
+                // Update cart page
+                loadCartPage();
+            });
+        }
+        
+        // Form validation
+        function validateCheckoutForm() {
+            const requiredFields = checkoutForm.querySelectorAll('[required]');
+            let isValid = true;
+            
+            requiredFields.forEach(field => {
+                if (!field.value.trim()) {
+                    field.style.borderColor = '#e74c3c';
+                    isValid = false;
+                    
+                    // Reset border color on input
+                    field.addEventListener('input', function() {
+                        this.style.borderColor = '#ddd';
+                    }, { once: true });
+                }
+            });
+            
+            // Email validation
+            const emailField = document.getElementById('email');
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (emailField.value && !emailRegex.test(emailField.value)) {
+                emailField.style.borderColor = '#e74c3c';
+                alert('Please enter a valid email address');
+                isValid = false;
+            }
+            
+            // Phone validation (basic)
+            const phoneField = document.getElementById('phone');
+            if (phoneField.value && phoneField.value.length < 10) {
+                phoneField.style.borderColor = '#e74c3c';
+                alert('Please enter a valid phone number (at least 10 digits)');
+                isValid = false;
+            }
+            
+            if (!isValid) {
+                alert('Please fill in all required fields correctly');
+            }
+            
+            return isValid;
+        }
+        
+        // Show success modal with order details
+        function showSuccessModal(orderData, orderNumber, total, shipping) {
+            const orderDetailsDiv = document.getElementById('orderDetails');
+            
+            orderDetailsDiv.innerHTML = `
+                <h4>Order Details</h4>
+                <p><strong>Order Number:</strong> ${orderNumber}</p>
+                <p><strong>Customer:</strong> ${orderData.customerInfo.fullName}</p>
+                <p><strong>Phone:</strong> ${orderData.customerInfo.phone}</p>
+                <p><strong>Email:</strong> ${orderData.customerInfo.email}</p>
+                <p><strong>Shipping Address:</strong> ${orderData.customerInfo.address}, ${orderData.customerInfo.city}, ${orderData.customerInfo.country} ${orderData.customerInfo.zipCode}</p>
+                <p><strong>Payment Method:</strong> ${getPaymentMethodName(orderData.paymentMethod)}</p>
+                <p><strong>Order Date:</strong> ${orderData.orderDate}</p>
+                <p><strong>Shipping:</strong> ${shipping} EGP</p>
+                <p><strong>Total Amount:</strong> <span style="color: #c19b53; font-weight: bold;">${total.toLocaleString()} EGP</span></p>
+                ${orderData.customerInfo.specialInstructions ? `<p><strong>Special Instructions:</strong> ${orderData.customerInfo.specialInstructions}</p>` : ''}
+                <p style="margin-top: 15px; color: #27ae60; font-weight: bold;">
+                    <i class="fas fa-check-circle"></i> Your order will be delivered within 3-5 business days
+                </p>
+            `;
+            
+            // Show success modal
+            successModal.classList.add('active');
+            document.body.style.overflow = 'hidden'; // Prevent scrolling
+            
+            // Log order for debugging
+            console.log('Order placed successfully:', {
+                orderNumber,
+                customer: orderData.customerInfo.fullName,
+                total: total,
+                paymentMethod: orderData.paymentMethod
+            });
+        }
+        
+        // Continue shopping after success
+        if (continueShoppingBtn) {
+            continueShoppingBtn.addEventListener('click', function() {
+                successModal.classList.remove('active');
+                document.body.style.overflow = ''; // Re-enable scrolling
+                window.location.href = 'EgyHome.html';
+            });
+        }
+        
+        // Print receipt
+        if (printReceiptBtn) {
+            printReceiptBtn.addEventListener('click', function() {
+                window.print();
+            });
+        }
+        
+        // Close modals when clicking outside
+        [checkoutModal, successModal].forEach(modal => {
+            modal.addEventListener('click', function(e) {
+                if (e.target === this) {
+                    this.classList.remove('active');
+                    document.body.style.overflow = '';
+                    if (this === checkoutModal) {
+                        resetCheckoutForm();
+                        currentStep = 'payment';
+                    }
+                }
+            });
+        });
+        
+        // Close modals with Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                checkoutModal.classList.remove('active');
+                successModal.classList.remove('active');
+                document.body.style.overflow = '';
+                if (checkoutModal.classList.contains('active')) {
+                    resetCheckoutForm();
+                    currentStep = 'payment';
+                }
+            }
+        });
+    }
+    
+    function getPaymentMethodName(method) {
+        const methodNames = {
+            'credit-card': 'Credit Card',
+            'cash': 'Cash on Delivery',
+            'paypal': 'PayPal',
+            'vodafone-cash': 'Vodafone Cash'
+        };
+        return methodNames[method] || method;
+    }
+
+    function removeFromCart(itemId) {
+        // Use shared manager to remove from cart
+        window.cartManager.removeFromCart(itemId);
+        loadCartPage();
+    }
+
+    function updateQuantity(itemId, change) {
+        // Use shared manager to update quantity
+        window.cartManager.updateCartQuantity(itemId, change);
+        loadCartPage();
+    }
+
+    function updateCartSummary() {
+        // Use shared manager to get cart total
+        const subtotal = window.cartManager.getCartTotal();
+        const shipping = 50;
+        const tax = subtotal * 0.14; // 14% tax
+        const total = subtotal + shipping + tax;
+        
+        document.getElementById('subtotal').textContent = `${subtotal.toLocaleString()} EGP`;
+        document.getElementById('shipping').textContent = `${shipping.toLocaleString()} EGP`;
+        document.getElementById('tax').textContent = `${tax.toLocaleString()} EGP`;
+        document.getElementById('total').textContent = `${total.toLocaleString()} EGP`;
+    }
+</script>
+</body>
+</html>
