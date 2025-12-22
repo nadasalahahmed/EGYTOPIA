@@ -1,0 +1,1457 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EGYTOPIA Collection</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="collection.css">
+    <style>
+        /* Additional styles for new categories grid */
+        .collections-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .collection-card {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: 2px solid #f5f1e8;
+            position: relative;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .collection-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(193, 155, 83, 0.15);
+            border-color: #c19b53;
+        }
+
+        .collection-image {
+            position: relative;
+            height: 240px;
+            overflow: hidden;
+        }
+
+        .collection-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.6s ease;
+        }
+
+        .collection-card:hover .collection-image img {
+            transform: scale(1.1);
+        }
+
+        .collection-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(to bottom, transparent 50%, rgba(26, 47, 58, 0.9));
+            display: flex;
+            align-items: flex-end;
+            padding: 20px;
+        }
+
+        .collection-overlay h3 {
+            color: white !important;
+            margin: 0;
+            font-size: 22px;
+            font-weight: 700;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .collection-info {
+            padding: 25px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .collection-title {
+            color: #1a2f3a;
+            font-size: 22px;
+            margin: 0 0 12px 0;
+            font-weight: 700;
+            line-height: 1.3;
+        }
+
+        .collection-description {
+            color: #666;
+            font-size: 15px;
+            line-height: 1.6;
+            margin: 0 0 20px 0;
+            flex-grow: 1;
+        }
+
+        .collection-stats {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding: 12px 0;
+            border-top: 1px solid #f0f0f0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .collection-stats span {
+            font-size: 14px;
+            color: #888;
+            font-weight: 600;
+        }
+
+        .collection-stats span:first-child {
+            color: #1a2f3a;
+        }
+
+        .collection-stats span:last-child {
+            color: #c19b53;
+            background: #f8f5e8;
+            padding: 4px 10px;
+            border-radius: 15px;
+        }
+
+        .view-collection-btn {
+            background: #1a2f3a;
+            color: white;
+            border: none;
+            padding: 14px 20px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            width: 100%;
+            border: 2px solid #1a2f3a;
+        }
+
+        .view-collection-btn:hover {
+            background: transparent;
+            color: #1a2f3a;
+        }
+
+        .collection-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: #c19b53;
+            color: white;
+            padding: 6px 15px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 700;
+            z-index: 2;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Page Header */
+        .page-header {
+            background: #1a2f3a;
+            padding: 100px 0;
+            text-align: center;
+            margin-top: 70px;
+        }
+
+        .page-header h1 {
+            font-size: 48px;
+            color: #c19b53;
+            margin-top: 35px;
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+
+        .page-header p {
+            font-size: 18px;
+            color: #848282;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Notification styles */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #1a2f3a;
+            color: #e9d8b6;
+            padding: 15px 25px;
+            border: 2px solid #c19b53;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            z-index: 10000;
+            transform: translateX(400px);
+            transition: transform 0.4s ease;
+            max-width: 350px;
+            font-weight: 600;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .notification.success {
+            background: #1a2f3a;
+            border-color: #c19b53;
+        }
+
+        .notification.error {
+            background: #e74c3c;
+            border-color: #c0392b;
+        }
+
+        /* Cart/Wishlist count animations */
+        .cart-update,
+        .wishlist-update {
+            animation: bounce 0.5s ease;
+        }
+
+        @keyframes bounce {
+
+            0%,
+            100% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.3);
+            }
+        }
+
+        /* Language Switcher Styles */
+        .language-switcher {
+            margin-right: auto;
+            margin-left: 20px;
+        }
+
+        .lang-btn {
+            background: rgba(193, 155, 83, 0.1);
+            border: 2px solid #c19b53;
+            color: #1a2f3a;
+            padding: 8px 15px;
+            border-radius: 25px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+
+        .lang-btn:hover {
+            background: #c19b53;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .lang-btn i {
+            font-size: 16px;
+        }
+
+        /* RTL Support Styles */
+        body.rtl {
+            direction: rtl;
+            text-align: right;
+        }
+
+        body.rtl .header.scrolled {
+            right: 20px;
+            left: 20px;
+        }
+
+        body.rtl .nav-menu {
+            margin-right: auto;
+            margin-left: 0;
+        }
+
+        body.rtl .nav-item {
+            margin-left: 0;
+            margin-right: 30px;
+        }
+
+        body.rtl .collection-stats {
+            justify-content: flex-end;
+            flex-direction: row-reverse;
+            gap: 15px;
+        }
+
+        body.rtl .collection-stats span:last-child {
+            order: -1;
+        }
+
+        body.rtl .treasure-pricing {
+            flex-direction: row-reverse;
+        }
+
+        body.rtl .treasure-rating {
+            flex-direction: row-reverse;
+        }
+
+        body.rtl .stars-rating {
+            margin-right: 0;
+            margin-left: 10px;
+        }
+
+        body.rtl .nile-rating {
+            flex-direction: row-reverse;
+        }
+
+        body.rtl .nile-stars {
+            margin-right: 0;
+            margin-left: 10px;
+        }
+
+        body.rtl .collection-header {
+            flex-direction: row-reverse;
+        }
+
+        body.rtl .section-header {
+            text-align: right;
+        }
+
+        body.rtl .section-main-title::after {
+            left: auto;
+            right: 50%;
+            transform: translateX(50%);
+        }
+
+        body.rtl .feature-item {
+            flex-direction: row-reverse;
+            text-align: right;
+        }
+
+        body.rtl .contact-info {
+            justify-content: flex-end;
+            flex-direction: row-reverse;
+        }
+
+        body.rtl .contact-info i {
+            margin-right: 0;
+            margin-left: 10px;
+        }
+
+        body.rtl .social-icons {
+            justify-content: flex-end;
+        }
+
+        body.rtl .newsletter-form {
+            direction: ltr;
+        }
+
+        body.rtl .links-grid {
+            direction: rtl;
+        }
+
+        body.rtl .collection-overlay {
+            text-align: right;
+        }
+
+        body.rtl .nile-wishlist-btn {
+            left: 20px;
+            right: auto;
+        }
+
+        body.rtl .treasure-wishlist {
+            left: 20px;
+            right: auto;
+        }
+
+        body.rtl .nile-badge,
+        body.rtl .back-badge {
+            left: auto;
+            right: 20px;
+        }
+
+        body.rtl .treasure-badge {
+            left: auto;
+            right: 20px;
+        }
+
+        body.rtl .nile-quick-view {
+            left: 20px;
+            right: auto;
+        }
+
+        body.rtl .quick-view-trigger {
+            left: 15px;
+            right: auto;
+        }
+
+        /* Language change animation */
+        @keyframes langChange {
+            0% { opacity: 0.5; transform: scale(0.95); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+        .lang-change {
+            animation: langChange 0.3s ease;
+        }
+
+        /* Mobile adjustments for RTL */
+        @media (max-width: 992px) {
+            body.rtl .language-switcher {
+                margin-left: 10px;
+                margin-right: auto;
+            }
+            
+            body.rtl .nav-container {
+                flex-direction: row-reverse;
+            }
+            
+            body.rtl .nav-toggle {
+                order: -1;
+            }
+            
+            body.rtl .nav-logo {
+                order: 1;
+            }
+            
+            body.rtl .nav-menu {
+                right: -100%;
+                left: auto;
+            }
+            
+            body.rtl .nav-menu.active {
+                right: 0;
+                left: auto;
+            }
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 992px) {
+            .collections-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .page-header {
+                padding: 70px 20px;
+                margin-top: 60px;
+            }
+
+            .page-header h1 {
+                font-size: 36px;
+            }
+
+            .page-header p {
+                font-size: 18px;
+            }
+
+            .collections-grid {
+                grid-template-columns: 1fr;
+                gap: 25px;
+            }
+
+            .collection-image {
+                height: 200px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .page-header {
+                padding: 60px 15px;
+            }
+
+            .page-header h1 {
+                font-size: 32px;
+            }
+
+            .page-header p {
+                font-size: 16px;
+            }
+
+            .collection-info {
+                padding: 20px;
+            }
+
+            .collection-title {
+                font-size: 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navigation Bar -->
+    <header class="header">
+        <nav class="navbar">
+            <div class="nav-container main-container">
+                <div class="nav-logo">
+                    <a href="EgyHome.html" class="logo">EGY<span>TOPIA</span></a>
+                </div>
+
+                <!-- Language Toggle Button -->
+                <div class="language-switcher">
+                    <button class="lang-btn" id="langToggle">
+                        <span class="lang-text" data-i18n="arabic">العربية</span>
+                        <i class="fas fa-globe"></i>
+                    </button>
+                </div>
+
+                <ul class="nav-menu">
+                    <li class="nav-item">
+                        <a href="EgyHome.html" class="nav-link" data-i18n="home">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="collection.html" class="nav-link active" data-i18n="collections">Collections</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="categories.html" class="nav-link" data-i18n="categories">Categories</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="artisan.html" class="nav-link" data-i18n="userPortal">User Portal</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="ourStory.html" class="nav-link" data-i18n="ourStory">Our Story</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="contact.html" class="nav-link" data-i18n="contact">Contact</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="cart.html" class="nav-link" id="cartLink">
+                            <i class="fas fa-shopping-cart"></i>
+                            <span class="cart-count">0</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="wishlist.html" class="nav-link" id="wishlistLink">
+                            <i class="fas fa-heart"></i>
+                            <span class="wishlist-count">0</span>
+                        </a>
+                    </li>
+                </ul>
+
+                <div class="nav-toggle">
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Page Header -->
+    <section class="page-header">
+        <div class="container">
+            <h1 data-i18n="collectionsTitle">Our Collections</h1>
+            <p data-i18n="collectionsDescription">Browse our curated categories of authentic Egyptian treasures, each representing a unique aspect of our
+                rich heritage.</p>
+        </div>
+    </section>
+
+    <!-- Collections Section -->
+    <section class="collections-section">
+        <div class="container">
+            <div class="collections-grid" id="collectionsContainer">
+                <!-- Categories will be dynamically loaded here -->
+            </div>
+        </div>
+    </section>
+
+    <!-- New Collection -->
+    <section class="nile-collection-section">
+        <div class="container">
+            <div class="collection-header">
+                <div class="collection-title-container">
+                    <span class="collection-watermark">𓋹𓍑𓋴</span>
+                    <h2 class="collection-main-title" data-i18n="newCollectionTitle">New Nile Items</h2>
+                    <p class="collection-subtitle" data-i18n="newCollectionSubtitle">Fresh arrivals inspired by the timeless beauty of the Nile</p>
+                </div>
+                <a href="categories.html" class="collection-view-all" data-i18n="viewAllNewArrivals">
+                    View All New Arrivals
+                    <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+
+            <div class="nile-grid">
+                <!-- Card 1 -->
+                <div class="nile-card new-item">
+                    <div class="nile-badge new-badge" data-i18n="newBadge">New</div>
+                    <div class="nile-card-inner">
+                        <div class="nile-card-front">
+                            <div class="nile-image-container">
+                                <img src="Images/WhatsApp Image 2025-12-09 at 12.29.06 AM.jpeg" alt="Nile Basket"
+                                    class="nile-image">
+                                <div class="nile-image-gradient"></div>
+                            </div>
+                            <div class="nile-card-content">
+                                <span class="nile-origin" data-i18n="fromLuxor">From Luxor</span>
+                                <h3 class="nile-product-title" data-i18n="desertGoldCollection">Desert Gold Collection</h3>
+                                <div class="nile-price">
+                                    <span class="nile-price-current">1,020 EGP</span>
+                                </div>
+                                <div class="nile-rating">
+                                    <div class="nile-stars">
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                    </div>
+                                    <span class="rating-value">5.0 (19 reviews)</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="nile-card-back">
+                            <div class="back-badge new-badge" data-i18n="newBadge">New</div>
+                            <div class="nile-back-content">
+                                <button class="nile-wishlist-btn" data-nile-id="n1">
+                                    <i class="far fa-heart"></i>
+                                </button>
+                                <button class="nile-quick-view" data-nile-id="n1" data-i18n="quickView">Quick View</button>
+
+                                <h4 class="nile-back-title" data-i18n="desertGoldCollection">Desert Gold Collection</h4>
+                                <p class="nile-back-desc" data-i18n="desertGoldDescription">
+                                    Warm, earthy designs inspired by the Egyptian desert, blended with luxurious golden
+                                    accents.</p>
+
+                                <div class="nile-back-features">
+                                    <div class="feature-item">
+                                        <i class="fas fa-check"></i>
+                                        <span data-i18n="naturalTextures">Natural textures and warm tones</span>
+                                    </div>
+                                    <div class="feature-item">
+                                        <i class="fas fa-check"></i>
+                                        <span data-i18n="handmadeArtisans">Handmade by local artisans</span>
+                                    </div>
+                                    <div class="feature-item">
+                                        <i class="fas fa-check"></i>
+                                        <span data-i18n="ecoFriendly">Eco-friendly and sustainably produced</span>
+                                    </div>
+                                </div>
+
+                                <button class="nile-add-to-cart" data-nile-id="n1" data-i18n="addToCart">
+                                    Add to Cart
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="nile-card new-item">
+                    <div class="nile-badge trending-badge" data-i18n="trendingBadge">Trending</div>
+                    <div class="nile-card-inner">
+                        <div class="nile-card-front">
+                            <div class="nile-image-container">
+                                <img src="Images/collections.jpeg"
+                                    alt="Egyptian Silk" class="nile-image">
+                                <div class="nile-image-gradient"></div>
+                            </div>
+                            <div class="nile-card-content">
+                                <span class="nile-origin" data-i18n="silkAswan">Silk from Aswan</span>
+                                <h3 class="nile-product-title" data-i18n="royalHeritageCollection">Royal Heritage Collection</h3>
+                                <div class="nile-price">
+                                    <span class="nile-price-current">2,700 EGP</span>
+                                    <span class="nile-price-original">3,500 EGP</span>
+                                </div>
+                                <div class="nile-rating">
+                                    <div class="nile-stars">
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star-half-alt"></i>
+                                    </div>
+                                    <span class="rating-value">4.5 (41 reviews)</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="nile-card-back">
+                            <div class="back-badge trending-badge" data-i18n="trendingBadge">Trending</div>
+                            <div class="nile-back-content">
+                                <button class="nile-wishlist-btn" data-nile-id="n2">
+                                    <i class="far fa-heart"></i>
+                                </button>
+                                <button class="nile-quick-view" data-nile-id="n2" data-i18n="quickView">Quick View</button>
+
+                                <h4 class="nile-back-title" data-i18n="royalHeritageCollection">Royal Heritage Collection</h4>
+                                <p class="nile-back-desc" data-i18n="royalHeritageDescription">A curated collection reflecting the elegance and power of Egyptian royalty</p>
+
+                                <div class="nile-back-features">
+                                    <div class="feature-item">
+                                        <i class="fas fa-check"></i>
+                                        <span data-i18n="premiumMaterials">Premium materials and refined finishes</span>
+                                    </div>
+                                    <div class="feature-item">
+                                        <i class="fas fa-check"></i>
+                                        <span data-i18n="pharaohDesigns">Designs inspired by pharaohs and queens</span>
+                                    </div>
+                                    <div class="feature-item">
+                                        <i class="fas fa-check"></i>
+                                        <span data-i18n="giftCollectors">Ideal for gifts and collectors</span>
+                                    </div>
+                                </div>
+
+                                <button class="nile-add-to-cart" data-nile-id="n2" data-i18n="addToCart">
+                                    Add to Cart
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="nile-card new-item">
+                    <div class="nile-badge new-badge" data-i18n="justInBadge">Just In</div>
+                    <div class="nile-card-inner">
+                        <div class="nile-card-front">
+                            <div class="nile-image-container">
+                                <img src="Images/box.jpeg"
+                                    alt="Papyrus Art" class="nile-image">
+                                <div class="nile-image-gradient"></div>
+                            </div>
+                            <div class="nile-card-content">
+                                <span class="nile-origin" data-i18n="artisanWorkshop">Artisan Workshop</span>
+                                <h3 class="nile-product-title" data-i18n="mysticPharaohCollection">Mystic Pharaoh Collection</h3>
+                                <div class="nile-price">
+                                    <span class="nile-price-current">1,830 EGP</span>
+                                </div>
+                                <div class="nile-rating">
+                                    <div class="nile-stars">
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="far fa-star"></i>
+                                    </div>
+                                    <span class="rating-value">4.0 (32 reviews)</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="nile-card-back">
+                            <div class="back-badge new-badge" data-i18n="justInBadge">Just In</div>
+                            <div class="nile-back-content">
+                                <button class="nile-wishlist-btn" data-nile-id="n3">
+                                    <i class="far fa-heart"></i>
+                                </button>
+                                <button class="nile-quick-view" data-nile-id="n3" data-i18n="quickView">Quick View</button>
+
+                                <h4 class="nile-back-title" data-i18n="mysticPharaohCollection">Mystic Pharaoh Collection</h4>
+                                <p class="nile-back-desc" data-i18n="mysticPharaohDescription">A curated collection blending mystical pharaonic symbols with modern design elements.</p>
+
+                                <div class="nile-back-features">
+                                    <div class="feature-item">
+                                        <i class="fas fa-check"></i>
+                                        <span data-i18n="spiritualMotifs">Inspired by ancient spiritual motifs</span>
+                                    </div>
+                                    <div class="feature-item">
+                                        <i class="fas fa-check"></i>
+                                        <span data-i18n="modernAesthetic">Modern, clean aesthetic</span>
+                                    </div>
+                                    <div class="feature-item">
+                                        <i class="fas fa-check"></i>
+                                        <span data-i18n="egyptianCreators">Designed by Egyptian creators</span>
+                                    </div>
+                                </div>
+
+                                <button class="nile-add-to-cart" data-nile-id="n3" data-i18n="addToCart">
+                                    Add to Cart
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Best Sellers -->
+    <section class="treasures-section">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-title-wrapper">
+                    <span class="section-subtitle" data-i18n="egyptianMasterpieces">Egyptian Masterpieces</span>
+                    <h2 class="section-main-title" data-i18n="bestSellingTreasures">Best Selling Treasures</h2>
+                </div>
+                <p class="section-description" data-i18n="treasuresDescription">Discover the most cherished artifacts from our collection, celebrated by
+                    collectors worldwide</p>
+            </div>
+
+            <div class="treasures-grid">
+                <!-- Card 1 -->
+                <div class="treasure-card bestseller-treasure">
+                    <div class="treasure-badge" data-i18n="bestsellerBadge">Bestseller</div>
+                    <div class="treasure-media">
+                        <div class="treasure-image-wrapper">
+                            <img src="Images/WhatsApp Image 2025-12-09 at 12.58.21 AM.jpeg"
+                                alt="Golden Ankh Necklace" class="treasure-image">
+                            <div class="image-overlay"></div>
+                        </div>
+                        <button class="treasure-wishlist" aria-label="Add to wishlist" data-treasure-id="t1">
+                            <i class="far fa-heart"></i>
+                        </button>
+                        <div class="treasure-actions">
+                            <button class="quick-view-trigger" data-treasure-id="t1" data-i18n="quickView">
+                                Quick View
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="treasure-content">
+                        <div class="treasure-category" data-i18n="jewelryCollection">Jewelry Collection</div>
+                        <h3 class="treasure-title" data-i18n="goldenAnkhNecklace">Golden Ankh Necklace</h3>
+                        <p class="treasure-desc" data-i18n="goldenAnkhDescription">24k gold pendant with ancient Egyptian ankh symbol, handcrafted by
+                            Cairo artisans
+                        </p>
+
+                        <div class="treasure-rating">
+                            <div class="stars-rating">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star-half-alt"></i>
+                            </div>
+                            <span class="rating-count">4.7 (128 reviews)</span>
+                        </div>
+
+                        <div class="treasure-pricing">
+                            <div class="price-current">1,000 EGP</div>
+                            <div class="price-original">1,240 EGP</div>
+                            <div class="price-save" data-i18n="savePercentage">Save 24%</div>
+                        </div>
+
+                        <button class="treasure-cart-btn" data-treasure-id="t1" data-i18n="addToCart">
+                            Add to Cart
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="treasure-card bestseller-treasure">
+                    <div class="treasure-badge" data-i18n="limitedBadge">Limited</div>
+                    <div class="treasure-media">
+                        <div class="treasure-image-wrapper">
+                            <img src="Images/WhatsApp Image 2025-12-09 at 1.02.06 AM.jpeg"
+                                alt="Nefertiti Statue" class="treasure-image">
+                            <div class="image-overlay"></div>
+                        </div>
+                        <button class="treasure-wishlist" aria-label="Add to wishlist" data-treasure-id="t2">
+                            <i class="far fa-heart"></i>
+                        </button>
+                        <div class="treasure-actions">
+                            <button class="quick-view-trigger" data-treasure-id="t2" data-i18n="quickView">
+                                Quick View
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="treasure-content">
+                        <div class="treasure-category" data-i18n="sculpturesCategory">Sculptures</div>
+                        <h3 class="treasure-title" data-i18n="nefertitiBust">Nefertiti Bust Statue</h3>
+                        <p class="treasure-desc" data-i18n="nefertitiDescription">Hand-carved alabaster replica of the famous Egyptian queen, museum
+                            quality</p>
+
+                        <div class="treasure-rating">
+                            <div class="stars-rating">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            </div>
+                            <span class="rating-count">5.0 (94 reviews)</span>
+                        </div>
+
+                        <div class="treasure-pricing">
+                            <div class="price-current">4,470 EGP</div>
+                            <div class="price-original">5,970 EGP</div>
+                            <div class="price-save" data-i18n="savePercentage25">Save 25%</div>
+                        </div>
+
+                        <button class="treasure-cart-btn" data-treasure-id="t2" data-i18n="addToCart">
+                            Add to Cart
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="treasure-card bestseller-treasure">
+                    <div class="treasure-badge" data-i18n="popularBadge">Popular</div>
+                    <div class="treasure-media">
+                        <div class="treasure-image-wrapper">
+                            <img src="Images/WhatsApp Image 2025-12-09 at 1.05.19 AM.jpeg"
+                                alt="Hieroglyphic Vase" class="treasure-image">
+                            <div class="image-overlay"></div>
+                        </div>
+                        <button class="treasure-wishlist" aria-label="Add to wishlist" data-treasure-id="t3">
+                            <i class="far fa-heart"></i>
+                        </button>
+                        <div class="treasure-actions">
+                            <button class="quick-view-trigger" data-treasure-id="t3" data-i18n="quickView">
+                                Quick View
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="treasure-content">
+                        <div class="treasure-category" data-i18n="homeDecorCategory">Home Decor</div>
+                        <h3 class="treasure-title" data-i18n="hieroglyphicVase">Hieroglyphic Ceramic Vase</h3>
+                        <p class="treasure-desc" data-i18n="hieroglyphicDescription">Traditional Egyptian pottery with authentic hieroglyphic inscriptions
+                            from Luxor
+                        </p>
+
+                        <div class="treasure-rating">
+                            <div class="stars-rating">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="far fa-star"></i>
+                            </div>
+                            <span class="rating-count">4.2 (67 reviews)</span>
+                        </div>
+
+                        <div class="treasure-pricing">
+                            <div class="price-current">2,370 EGP</div>
+                            <div class="price-original">2,790 EGP</div>
+                            <div class="price-save" data-i18n="savePercentage20">Save 20%</div>
+                        </div>
+
+                        <button class="treasure-cart-btn" data-treasure-id="t3" data-i18n="addToCart">
+                            Add to Cart
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Quick View Modal -->
+    <div class="modal-overlay" id="quickViewModal">
+        <div class="modal">
+            <button class="close-modal" id="closeQuickView">×</button>
+            <div class="modal-content">
+                <div class="modal-image">
+                    <img id="modalProductImage" src="" alt="">
+                </div>
+                <div class="modal-info">
+                    <h3 class="modal-title" id="modalProductTitle"></h3>
+                    <div class="modal-price" id="modalProductPrice"></div>
+                    <div class="modal-rating" id="modalProductRating"></div>
+                    <p class="modal-description" id="modalProductDescription"></p>
+                    <div class="modal-actions">
+                        <button class="btn btn-primary" id="modalAddToCart" data-i18n="addToCart">Add to Cart</button>
+                        <button class="btn btn-secondary" id="modalAddToWishlist">Add to Wishlist</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Login Required Modal (will be created dynamically) -->
+
+    <footer class="footer-container">
+        <div class="main-container">
+            <div class="footer-header">
+                <h1>EGYTOPIA</h1>
+                <h2 data-i18n="egyptianHeritage">Egyptian Heritage</h2>
+                <p data-i18n="footerTagline">Bringing the timeless beauty of Egyptian craftsmanship to the world.</p>
+            </div>
+
+            <div class="hieroglyphic-border"></div>
+
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3 data-i18n="quickLinks">Quick Links</h3>
+                    <div class="links-grid">
+                        <div class="footer-links">
+                            <a href="EgyHome.html" data-i18n="home">Home</a>
+                            <a href="collection.html" data-i18n="products">Products</a>
+                            <a href="our-story.html" data-i18n="aboutUs">About Us</a>
+                            <a href="blog.html" data-i18n="blog">Blog</a>
+                        </div>
+                        <div class="footer-links">
+                            <a href="shipping.html" data-i18n="shippingReturns">Shipping & Returns</a>
+                            <a href="faq.html" data-i18n="faq">FAQ</a>
+                            <a href="privacy.html" data-i18n="privacyPolicy">Privacy Policy</a>
+                            <a href="terms.html" data-i18n="termsConditions">Terms & Conditions</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="footer-section">
+                    <h3 data-i18n="customerService">Customer Service</h3>
+                    <div class="contact-info">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <div>123 Nile Avenue, Cairo, Egypt</div>
+                    </div>
+                    <div class="contact-info">
+                        <i class="fas fa-phone"></i>
+                        <div>+20 123 456 7890</div>
+                    </div>
+                    <div class="contact-info">
+                        <i class="fas fa-envelope"></i>
+                        <div>info@egytopia.eg</div>
+                    </div>
+
+                    <div class="social-icons">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-pinterest"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                    </div>
+                </div>
+
+                <div class="footer-section">
+                    <h3 data-i18n="subscribeNewsletter">Subscribe to Our Newsletter</h3>
+                    <div class="newsletter">
+                        <p data-i18n="newsletterDesc">Get exclusive offers and updates on new products</p>
+                        <form class="newsletter-form">
+                            <input type="email" placeholder="Enter your email" data-i18n-placeholder="emailPlaceholder" required>
+                            <button type="submit" data-i18n="subscribe">Subscribe</button>
+                        </form>
+                        <p data-i18n="newsletterNote">By subscribing, you agree to our Privacy Policy and consent to receive updates from our company.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p data-i18n="copyright">&copy; 2025 EGYTOPIA Egyptian Heritage. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="collection.js"></script>
+    <!-- <script>
+        // Language Switching Functionality for collections page
+        let currentLanguage = 'en'; // Default language
+
+        // Arabic translations for collections page
+        const translations = {
+            en: {
+                // Navigation
+                home: "Home",
+                collections: "Collections",
+                categories: "Categories",
+                userPortal: "User Portal",
+                ourStory: "Our Story",
+                contact: "Contact",
+                arabic: "العربية",
+                
+                // Page Header
+                collectionsTitle: "Our Collections",
+                collectionsDescription: "Browse our curated categories of authentic Egyptian treasures, each representing a unique aspect of our rich heritage.",
+                
+                // Category Cards
+                jewelryCollection: "Jewelry Collection",
+                jewelryDescription: "Exquisite Egyptian jewelry featuring gold, silver, and precious stones. From ancient-inspired cartouches to modern scarab designs.",
+                egyptianArt: "Egyptian Art",
+                artDescription: "Authentic Egyptian art including papyrus paintings, hieroglyphic art, and modern interpretations of ancient themes.",
+                textilesFabrics: "Textiles & Fabrics",
+                textilesDescription: "Luxurious Egyptian cotton, silk shawls, and embroidered fabrics with traditional patterns and modern designs.",
+                sculpturesStatues: "Sculptures & Statues",
+                sculpturesDescription: "Hand-carved sculptures of Egyptian deities, pharaohs, and symbolic animals from premium materials.",
+                homeDecor: "Home Decor",
+                homeDecorDescription: "Egyptian-inspired home decor including vases, wall art, and decorative pieces for modern interiors.",
+                traditionalCrafts: "Traditional Crafts",
+                craftsDescription: "Traditional Egyptian crafts including pottery, basket weaving, and handcrafted items using ancient techniques.",
+                agriculturalProducts: "Agricultural Products",
+                agriculturalDescription: "Premium Egyptian agricultural products including dates, honey, herbs, and spices from the Nile Valley.",
+                handmadeGoods: "Handmade Goods",
+                handmadeDescription: "Unique handmade items including leather goods, ceramics, and decorative objects crafted by Egyptian artisans.",
+                
+                // New Collection Section
+                newCollectionTitle: "New Nile Items",
+                newCollectionSubtitle: "Fresh arrivals inspired by the timeless beauty of the Nile",
+                viewAllNewArrivals: "View All New Arrivals",
+                newBadge: "New",
+                trendingBadge: "Trending",
+                justInBadge: "Just In",
+                fromLuxor: "From Luxor",
+                silkAswan: "Silk from Aswan",
+                artisanWorkshop: "Artisan Workshop",
+                desertGoldCollection: "Desert Gold Collection",
+                desertGoldDescription: "Warm, earthy designs inspired by the Egyptian desert, blended with luxurious golden accents.",
+                royalHeritageCollection: "Royal Heritage Collection",
+                royalHeritageDescription: "A curated collection reflecting the elegance and power of Egyptian royalty",
+                mysticPharaohCollection: "Mystic Pharaoh Collection",
+                mysticPharaohDescription: "A curated collection blending mystical pharaonic symbols with modern design elements.",
+                naturalTextures: "Natural textures and warm tones",
+                handmadeArtisans: "Handmade by local artisans",
+                ecoFriendly: "Eco-friendly and sustainably produced",
+                premiumMaterials: "Premium materials and refined finishes",
+                pharaohDesigns: "Designs inspired by pharaohs and queens",
+                giftCollectors: "Ideal for gifts and collectors",
+                spiritualMotifs: "Inspired by ancient spiritual motifs",
+                modernAesthetic: "Modern, clean aesthetic",
+                egyptianCreators: "Designed by Egyptian creators",
+                
+                // Best Sellers Section
+                egyptianMasterpieces: "Egyptian Masterpieces",
+                bestSellingTreasures: "Best Selling Treasures",
+                treasuresDescription: "Discover the most cherished artifacts from our collection, celebrated by collectors worldwide",
+                bestsellerBadge: "Bestseller",
+                limitedBadge: "Limited",
+                popularBadge: "Popular",
+                jewelryCollection: "Jewelry Collection",
+                goldenAnkhNecklace: "Golden Ankh Necklace",
+                goldenAnkhDescription: "24k gold pendant with ancient Egyptian ankh symbol, handcrafted by Cairo artisans",
+                sculpturesCategory: "Sculptures",
+                nefertitiBust: "Nefertiti Bust Statue",
+                nefertitiDescription: "Hand-carved alabaster replica of the famous Egyptian queen, museum quality",
+                homeDecorCategory: "Home Decor",
+                hieroglyphicVase: "Hieroglyphic Ceramic Vase",
+                hieroglyphicDescription: "Traditional Egyptian pottery with authentic hieroglyphic inscriptions from Luxor",
+                savePercentage: "Save 24%",
+                savePercentage25: "Save 25%",
+                savePercentage20: "Save 20%",
+                
+                // Quick View & Buttons
+                quickView: "Quick View",
+                addToCart: "Add to Cart",
+                
+                // Footer
+                egyptianHeritage: "Egyptian Heritage",
+                footerTagline: "Bringing the timeless beauty of Egyptian craftsmanship to the world.",
+                quickLinks: "Quick Links",
+                products: "Products",
+                aboutUs: "About Us",
+                blog: "Blog",
+                shippingReturns: "Shipping & Returns",
+                faq: "FAQ",
+                privacyPolicy: "Privacy Policy",
+                termsConditions: "Terms & Conditions",
+                customerService: "Customer Service",
+                subscribeNewsletter: "Subscribe to Our Newsletter",
+                newsletterDesc: "Get exclusive offers and updates on new products",
+                emailPlaceholder: "Enter your email",
+                subscribe: "Subscribe",
+                newsletterNote: "By subscribing, you agree to our Privacy Policy and consent to receive updates from our company.",
+                copyright: "© 2025 EGYTOPIA Egyptian Heritage. All rights reserved."
+            },
+            
+            ar: {
+                // Navigation
+                home: "الرئيسية",
+                collections: "المجموعات",
+                categories: "الفئات",
+                userPortal: "بوابة المستخدم",
+                ourStory: "قصتنا",
+                contact: "اتصل بنا",
+                arabic: "English",
+                
+                // Page Header
+                collectionsTitle: "مجموعاتنا",
+                collectionsDescription: "تصفح فئاتنا المختارة من الكنوز المصرية الأصيلة، كل منها يمثل جانبًا فريدًا من تراثنا الغني.",
+                
+                // Category Cards
+                jewelryCollection: "مجموعة المجوهرات",
+                jewelryDescription: "مجوهرات مصرية رائعة تتميز بالذهب والفضة والأحجار الكريمة. من خراطيش مستوحاة من العصور القديمة إلى تصميمات الجعران الحديثة.",
+                egyptianArt: "الفن المصري",
+                artDescription: "فن مصري أصيل يشمل لوحات البردي، فن الهيروغليفية، وتفسيرات حديثة للمواضيع القديمة.",
+                textilesFabrics: "المنسوجات والأقمشة",
+                textilesDescription: "قطن مصري فاخر، وشالات حرير، وأقمشة مطرزة بأنماط تقليدية وتصميمات حديثة.",
+                sculpturesStatues: "المنحوتات والتماثيل",
+                sculpturesDescription: "منحوتات منحوتة يدويًا للآلهة المصرية والفراعنة والحيوانات الرمزية من مواد ممتازة.",
+                homeDecor: "ديكور المنزل",
+                homeDecorDescription: "ديكور منزلي مستوحى من مصر يشمل المزهريات والفن الجداري والقطع الزخرفية للديكورات الداخلية الحديثة.",
+                traditionalCrafts: "الحرف التقليدية",
+                craftsDescription: "الحرف المصرية التقليدية بما في ذلك الفخار وحياكة السلال والمنتجات المصنوعة يدويًا باستخدام تقنيات قديمة.",
+                agriculturalProducts: "المنتجات الزراعية",
+                agriculturalDescription: "منتجات زراعية مصرية ممتازة تشمل التمور والعسل والأعشاب والتوابل من وادي النيل.",
+                handmadeGoods: "البضائع المصنوعة يدويًا",
+                handmadeDescription: "عناصر فريدة مصنوعة يدويًا تشمل منتجات الجلود والسيراميك والأشياء الزخرفية المصنوعة من قبل الحرفيين المصريين.",
+                
+                // New Collection Section
+                newCollectionTitle: "منتجات النيل الجديدة",
+                newCollectionSubtitle: "وصول جديد مستوحى من الجمال الخالد للنيل",
+                viewAllNewArrivals: "عرض كل الوافدين الجدد",
+                newBadge: "جديد",
+                trendingBadge: "الأكثر رواجًا",
+                justInBadge: "وصل حديثًا",
+                fromLuxor: "من الأقصر",
+                silkAswan: "حرير من أسوان",
+                artisanWorkshop: "ورشة الحرفيين",
+                desertGoldCollection: "مجموعة ذهب الصحراء",
+                desertGoldDescription: "تصميمات دافئة وترابية مستوحاة من الصحراء المصرية، ممزوجة بإكسسوارات ذهبية فاخرة.",
+                royalHeritageCollection: "مجموعة التراث الملكي",
+                royalHeritageDescription: "مجموعة مختارة تعكس أناقة وقوة الملوك المصريين",
+                mysticPharaohCollection: "مجموعة الفرعون الصوفي",
+                mysticPharaohDescription: "مجموعة مختارة تدمج الرموز الفرعونية الصوفية مع عناصر التصميم الحديثة.",
+                naturalTextures: "نسيج طبيعي وألوان دافئة",
+                handmadeArtisans: "مصنوع يدويًا من قبل الحرفيين المحليين",
+                ecoFriendly: "صديق للبيئة ومُنتج بشكل مستدام",
+                premiumMaterials: "مواد ممتازة وتشطيبات راقية",
+                pharaohDesigns: "تصميمات مستوحاة من الفراعنة والملكات",
+                giftCollectors: "مثالي للهدايا والمجمعين",
+                spiritualMotifs: "مستوحى من الزخارف الروحية القديمة",
+                modernAesthetic: "جماليات حديثة ونظيفة",
+                egyptianCreators: "مصمم من قبل مبتكرين مصريين",
+                
+                // Best Sellers Section
+                egyptianMasterpieces: "روائع مصرية",
+                bestSellingTreasures: "الكنوز الأكثر مبيعًا",
+                treasuresDescription: "اكتشف أكثر القطع الأثرية المحبوبة من مجموعتنا، التي يحتفل بها هواة الجمع في جميع أنحاء العالم",
+                bestsellerBadge: "الأكثر مبيعًا",
+                limitedBadge: "محدود",
+                popularBadge: "شائع",
+                jewelryCollection: "مجموعة المجوهرات",
+                goldenAnkhNecklace: "قلادة عنخ ذهبية",
+                goldenAnkhDescription: "قلادة ذهبية عيار 24 قيراط مع رمز عنخ مصري قديم، مصنوعة يدويًا من قبل حرفيين القاهرة",
+                sculpturesCategory: "المنحوتات",
+                nefertitiBust: "تمثال نصفي لنفرتيتي",
+                nefertitiDescription: "نسخة منحوتة يدويًا من الألباستر للملكة المصرية الشهيرة، بجودة المتحف",
+                homeDecorCategory: "ديكور المنزل",
+                hieroglyphicVase: "مزهرية هيروغليفية خزفية",
+                hieroglyphicDescription: "فخار مصري تقليدي مع نقوش هيروغليفية أصلية من الأقصر",
+                savePercentage: "وفر 24%",
+                savePercentage25: "وفر 25%",
+                savePercentage20: "وفر 20%",
+                
+                // Quick View & Buttons
+                quickView: "عرض سريع",
+                addToCart: "أضف إلى السلة",
+                
+                // Footer
+                egyptianHeritage: "التراث المصري",
+                footerTagline: "نحمل جمال الحرفية المصرية الخالدة إلى العالم.",
+                quickLinks: "روابط سريعة",
+                products: "المنتجات",
+                aboutUs: "من نحن",
+                blog: "المدونة",
+                shippingReturns: "الشحن والإرجاع",
+                faq: "الأسئلة الشائعة",
+                privacyPolicy: "سياسة الخصوصية",
+                termsConditions: "الشروط والأحكام",
+                customerService: "خدمة العملاء",
+                subscribeNewsletter: "اشترك في نشرتنا الإخبارية",
+                newsletterDesc: "احصل على عروض حصرية وتحديثات حول المنتجات الجديدة",
+                emailPlaceholder: "أدخل بريدك الإلكتروني",
+                subscribe: "اشتراك",
+                newsletterNote: "بالاشتراك، فإنك توافق على سياسة الخصوصية الخاصة بنا وتوافق على تلقي التحديثات من شركتنا.",
+                copyright: "© 2025 EGYTOPIA التراث المصري. جميع الحقوق محفوظة."
+            }
+        };
+
+        // Initialize language switcher
+        function setupLanguageSwitcher() {
+            const langToggle = document.getElementById('langToggle');
+            const langText = document.querySelector('.lang-text');
+            
+            if (!langToggle) return;
+            
+            // Load saved language preference
+            const savedLang = localStorage.getItem('egytopiaLanguage');
+            if (savedLang) {
+                currentLanguage = savedLang;
+            }
+            
+            // Set initial state
+            updateLanguageUI();
+            
+            // Toggle language on button click
+            langToggle.addEventListener('click', function() {
+                currentLanguage = currentLanguage === 'en' ? 'ar' : 'en';
+                localStorage.setItem('egytopiaLanguage', currentLanguage);
+                updateLanguageUI();
+                translatePage();
+                updateRTLDirection();
+                showNotification(currentLanguage === 'en' ? 'Language changed to English' : 'تم تغيير اللغة إلى العربية', 'info');
+            });
+        }
+
+        // Update language button UI
+        function updateLanguageUI() {
+            const langText = document.querySelector('.lang-text');
+            const langToggle = document.getElementById('langToggle');
+            
+            if (langText) {
+                langText.textContent = currentLanguage === 'en' ? 'العربية' : 'English';
+            }
+            
+            if (langToggle) {
+                // Add animation
+                langToggle.classList.add('lang-change');
+                langToggle.style.transform = 'scale(0.95)';
+                setTimeout(() => {
+                    langToggle.style.transform = 'scale(1)';
+                    langToggle.classList.remove('lang-change');
+                }, 300);
+            }
+        }
+
+        // Update RTL/LTR direction
+        function updateRTLDirection() {
+            if (currentLanguage === 'ar') {
+                document.body.classList.add('rtl');
+                document.body.dir = 'rtl';
+                document.documentElement.lang = 'ar';
+            } else {
+                document.body.classList.remove('rtl');
+                document.body.dir = 'ltr';
+                document.documentElement.lang = 'en';
+            }
+        }
+
+        // Translate the entire page
+        function translatePage() {
+            const trans = translations[currentLanguage];
+            
+            // Update all translatable elements
+            updateTextContent('[data-i18n="home"]', trans.home);
+            updateTextContent('[data-i18n="collections"]', trans.collections);
+            updateTextContent('[data-i18n="categories"]', trans.categories);
+            updateTextContent('[data-i18n="userPortal"]', trans.userPortal);
+            updateTextContent('[data-i18n="ourStory"]', trans.ourStory);
+            updateTextContent('[data-i18n="contact"]', trans.contact);
+            updateTextContent('[data-i18n="arabic"]', trans.arabic);
+            
+            // Page Header
+            updateTextContent('[data-i18n="collectionsTitle"]', trans.collectionsTitle);
+            updateTextContent('[data-i18n="collectionsDescription"]', trans.collectionsDescription);
+            
+            // Category cards (these will be updated dynamically in collection.js)
+            
+            // New Collection Section
+            updateTextContent('[data-i18n="newCollectionTitle"]', trans.newCollectionTitle);
+            updateTextContent('[data-i18n="newCollectionSubtitle"]', trans.newCollectionSubtitle);
+            updateTextContent('[data-i18n="viewAllNewArrivals"]', trans.viewAllNewArrivals);
+            updateTextContent('[data-i18n="newBadge"]', trans.newBadge);
+            updateTextContent('[data-i18n="trendingBadge"]', trans.trendingBadge);
+            updateTextContent('[data-i18n="justInBadge"]', trans.justInBadge);
+            updateTextContent('[data-i18n="fromLuxor"]', trans.fromLuxor);
+            updateTextContent('[data-i18n="silkAswan"]', trans.silkAswan);
+            updateTextContent('[data-i18n="artisanWorkshop"]', trans.artisanWorkshop);
+            updateTextContent('[data-i18n="desertGoldCollection"]', trans.desertGoldCollection);
+            updateTextContent('[data-i18n="desertGoldDescription"]', trans.desertGoldDescription);
+            updateTextContent('[data-i18n="royalHeritageCollection"]', trans.royalHeritageCollection);
+            updateTextContent('[data-i18n="royalHeritageDescription"]', trans.royalHeritageDescription);
+            updateTextContent('[data-i18n="mysticPharaohCollection"]', trans.mysticPharaohCollection);
+            updateTextContent('[data-i18n="mysticPharaohDescription"]', trans.mysticPharaohDescription);
+            updateTextContent('[data-i18n="naturalTextures"]', trans.naturalTextures);
+            updateTextContent('[data-i18n="handmadeArtisans"]', trans.handmadeArtisans);
+            updateTextContent('[data-i18n="ecoFriendly"]', trans.ecoFriendly);
+            updateTextContent('[data-i18n="premiumMaterials"]', trans.premiumMaterials);
+            updateTextContent('[data-i18n="pharaohDesigns"]', trans.pharaohDesigns);
+            updateTextContent('[data-i18n="giftCollectors"]', trans.giftCollectors);
+            updateTextContent('[data-i18n="spiritualMotifs"]', trans.spiritualMotifs);
+            updateTextContent('[data-i18n="modernAesthetic"]', trans.modernAesthetic);
+            updateTextContent('[data-i18n="egyptianCreators"]', trans.egyptianCreators);
+            
+            // Best Sellers Section
+            updateTextContent('[data-i18n="egyptianMasterpieces"]', trans.egyptianMasterpieces);
+            updateTextContent('[data-i18n="bestSellingTreasures"]', trans.bestSellingTreasures);
+            updateTextContent('[data-i18n="treasuresDescription"]', trans.treasuresDescription);
+            updateTextContent('[data-i18n="bestsellerBadge"]', trans.bestsellerBadge);
+            updateTextContent('[data-i18n="limitedBadge"]', trans.limitedBadge);
+            updateTextContent('[data-i18n="popularBadge"]', trans.popularBadge);
+            updateTextContent('[data-i18n="jewelryCollection"]', trans.jewelryCollection);
+            updateTextContent('[data-i18n="goldenAnkhNecklace"]', trans.goldenAnkhNecklace);
+            updateTextContent('[data-i18n="goldenAnkhDescription"]', trans.goldenAnkhDescription);
+            updateTextContent('[data-i18n="sculpturesCategory"]', trans.sculpturesCategory);
+            updateTextContent('[data-i18n="nefertitiBust"]', trans.nefertitiBust);
+            updateTextContent('[data-i18n="nefertitiDescription"]', trans.nefertitiDescription);
+            updateTextContent('[data-i18n="homeDecorCategory"]', trans.homeDecorCategory);
+            updateTextContent('[data-i18n="hieroglyphicVase"]', trans.hieroglyphicVase);
+            updateTextContent('[data-i18n="hieroglyphicDescription"]', trans.hieroglyphicDescription);
+            updateTextContent('[data-i18n="savePercentage"]', trans.savePercentage);
+            updateTextContent('[data-i18n="savePercentage25"]', trans.savePercentage25);
+            updateTextContent('[data-i18n="savePercentage20"]', trans.savePercentage20);
+            
+            // Quick View & Buttons
+            updateTextContent('[data-i18n="quickView"]', trans.quickView);
+            updateTextContent('[data-i18n="addToCart"]', trans.addToCart);
+            
+            // Footer
+            updateTextContent('[data-i18n="egyptianHeritage"]', trans.egyptianHeritage);
+            updateTextContent('[data-i18n="footerTagline"]', trans.footerTagline);
+            updateTextContent('[data-i18n="quickLinks"]', trans.quickLinks);
+            updateTextContent('[data-i18n="products"]', trans.products);
+            updateTextContent('[data-i18n="aboutUs"]', trans.aboutUs);
+            updateTextContent('[data-i18n="blog"]', trans.blog);
+            updateTextContent('[data-i18n="shippingReturns"]', trans.shippingReturns);
+            updateTextContent('[data-i18n="faq"]', trans.faq);
+            updateTextContent('[data-i18n="privacyPolicy"]', trans.privacyPolicy);
+            updateTextContent('[data-i18n="termsConditions"]', trans.termsConditions);
+            updateTextContent('[data-i18n="customerService"]', trans.customerService);
+            updateTextContent('[data-i18n="subscribeNewsletter"]', trans.subscribeNewsletter);
+            updateTextContent('[data-i18n="newsletterDesc"]', trans.newsletterDesc);
+            updateTextContent('[data-i18n="subscribe"]', trans.subscribe);
+            updateTextContent('[data-i18n="newsletterNote"]', trans.newsletterNote);
+            updateTextContent('[data-i18n="copyright"]', trans.copyright);
+            
+            // Update input placeholders
+            updatePlaceholder('[data-i18n-placeholder="emailPlaceholder"]', trans.emailPlaceholder);
+        }
+
+        // Helper function to update text content
+        function updateTextContent(selector, text) {
+            const elements = document.querySelectorAll(selector);
+            elements.forEach(element => {
+                element.textContent = text;
+            });
+        }
+
+        // Helper function to update placeholder text
+        function updatePlaceholder(selector, text) {
+            const elements = document.querySelectorAll(selector);
+            elements.forEach(element => {
+                element.placeholder = text;
+            });
+        }
+
+        // Show notification
+        function showNotification(message, type = 'success') {
+            const existingNotification = document.querySelector('.notification');
+            if (existingNotification) {
+                existingNotification.remove();
+            }
+
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.textContent = message;
+
+            document.body.appendChild(notification);
+
+            setTimeout(() => {
+                notification.classList.add('show');
+            }, 10);
+
+            setTimeout(() => {
+                notification.classList.remove('show');
+                setTimeout(() => {
+                    if (notification.parentNode) {
+                        notification.remove();
+                    }
+                }, 300);
+            }, 3000);
+        }
+
+        // Initialize on DOM load
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize language switcher
+            setupLanguageSwitcher();
+            
+            // Check for saved language preference
+            const savedLang = localStorage.getItem('egytopiaLanguage');
+            if (savedLang === 'ar') {
+                currentLanguage = 'ar';
+                translatePage();
+                updateRTLDirection();
+                updateLanguageUI();
+            }
+        });
+    </script> -->
+</body>
+
+</html>
