@@ -1,0 +1,1731 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopping Cart - Egytopia</title>
+    <link rel="stylesheet" href="EGYHome.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Language Switcher Styles */
+        .language-switcher {
+            margin-left: auto;
+            margin-right: 20px;
+        }
+        
+        .lang-btn {
+            background: transparent;
+            border: 2px solid #c19b53;
+            color: #1a2f3a;
+            padding: 8px 16px;
+            border-radius: 25px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .lang-btn:hover {
+            background: #c19b53;
+            color: white;
+            transform: scale(1.05);
+        }
+        
+        .lang-text {
+            font-size: 14px;
+        }
+        
+        /* RTL Support */
+        .rtl {
+            direction: rtl;
+            text-align: right;
+        }
+        
+        .rtl .cart-header,
+        .rtl .empty-cart,
+        .rtl .cart-item-details,
+        .rtl .modal-header,
+        .rtl .payment-info,
+        .rtl .form-group,
+        .rtl .order-details {
+            direction: rtl;
+        }
+        
+        .rtl .cart-item {
+            flex-direction: row-reverse;
+        }
+        
+        .rtl .cart-item-image {
+            margin-right: 0;
+            margin-left: 20px;
+        }
+        
+        .rtl .summary-row,
+        .rtl .cart-item-quantity,
+        .rtl .form-row {
+            flex-direction: row-reverse;
+        }
+        
+        .rtl .payment-icon {
+            margin-right: 0;
+            margin-left: 15px;
+        }
+        
+        .rtl .modal-actions,
+        .rtl .cart-actions {
+            flex-direction: row-reverse;
+        }
+        
+        /* Cart Styles */
+        .cart-container {
+            margin-top: 100px;
+            padding: 40px 20px;
+            min-height: 60vh;
+        }
+        
+        .cart-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .cart-header h1 {
+            color: #c19b53;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .cart-content {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        
+        .cart-items {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+            overflow: hidden;
+        }
+        
+        .cart-item {
+            display: flex;
+            align-items: center;
+            padding: 20px;
+            border-bottom: 1px solid #f0f0f0;
+            transition: background-color 0.3s ease;
+        }
+        
+        .cart-item:hover {
+            background-color: #f9f9f9;
+        }
+        
+        .cart-item:last-child {
+            border-bottom: none;
+        }
+        
+        .cart-item-image {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-right: 20px;
+        }
+        
+        .cart-item-details {
+            flex: 1;
+        }
+        
+        .cart-item-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        
+        .cart-item-price {
+            color: #c19b53;
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+        
+        .cart-item-quantity {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 10px 0;
+        }
+        
+        .quantity-btn {
+            width: 30px;
+            height: 30px;
+            border: 1px solid #ddd;
+            background: white;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+        
+        .quantity-btn:hover {
+            background: #c19b53;
+            color: white;
+            border-color: #c19b53;
+        }
+        
+        .quantity-display {
+            min-width: 40px;
+            text-align: center;
+            font-weight: 600;
+        }
+        
+        .remove-item {
+            background: none;
+            border: none;
+            color: #e74c3c;
+            cursor: pointer;
+            padding: 5px 10px;
+            border-radius: 4px;
+            transition: background-color 0.3s ease;
+        }
+        
+        .remove-item:hover {
+            background: #e74c3c;
+            color: white;
+        }
+        
+        .cart-summary {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            padding: 30px;
+        }
+        
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        .summary-total {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #c19b53;
+        }
+        
+        .cart-actions {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+        
+        .empty-cart {
+            text-align: center;
+            padding: 60px 20px;
+        }
+        
+        .empty-cart i {
+            font-size: 4rem;
+            color: #ddd;
+            margin-bottom: 20px;
+        }
+        
+        .empty-cart h3 {
+            color: #666;
+            margin-bottom: 20px;
+        }
+        
+        .continue-shopping {
+            display: inline-block;
+            margin-top: 20px;
+            text-decoration: none;
+            color: #c19b53;
+            font-weight: 600;
+        }
+        
+        .continue-shopping:hover {
+            text-decoration: underline;
+        }
+        
+        /* Checkout Modal Styles */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            overflow-y: auto;
+            padding: 20px;
+        }
+        
+        .modal-overlay.active {
+            display: flex;
+        }
+        
+        .checkout-modal {
+            background: white;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            animation: modalSlideIn 0.3s ease;
+        }
+        
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .modal-header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        
+        .modal-header h2 {
+            color: #c19b53;
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+        }
+        
+        .modal-header p {
+            color: #666;
+        }
+        
+        .payment-methods {
+            margin-bottom: 25px;
+        }
+        
+        .payment-method {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            border: 2px solid #eee;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .payment-method:hover {
+            border-color: #c19b53;
+        }
+        
+        .payment-method.selected {
+            border-color: #c19b53;
+            background-color: rgba(193, 155, 83, 0.05);
+        }
+        
+        .payment-icon {
+            width: 40px;
+            height: 40px;
+            background: #f5f5f5;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            color: #c19b53;
+            font-size: 1.2rem;
+        }
+        
+        .payment-info h4 {
+            margin: 0 0 5px 0;
+            color: #333;
+        }
+        
+        .payment-info p {
+            margin: 0;
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        /* Contact and Address Form */
+        .contact-form {
+            display: none;
+            margin-top: 25px;
+            padding-top: 25px;
+            border-top: 1px solid #eee;
+        }
+        
+        .contact-form.active {
+            display: block;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+        
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #c19b53;
+        }
+        
+        .form-row {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .form-row .form-group {
+            flex: 1;
+            margin-bottom: 0;
+        }
+        
+        .required::after {
+            content: " *";
+            color: #e74c3c;
+        }
+        
+        .form-note {
+            font-size: 0.85rem;
+            color: #666;
+            margin-top: 5px;
+        }
+        
+        .payment-specific-info {
+            background: #f9f9f9;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 10px;
+            font-size: 0.9rem;
+            color: #666;
+        }
+        
+        .modal-actions {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+        
+        .modal-actions .btn {
+            flex: 1;
+            padding: 12px;
+        }
+        
+        /* Success Modal */
+        .success-modal .modal-header i {
+            font-size: 4rem;
+            color: #2ecc71;
+            margin-bottom: 20px;
+        }
+        
+        .success-modal .modal-header h2 {
+            color: #27ae60;
+        }
+        
+        .order-details {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            text-align: left;
+        }
+        
+        .order-details h4 {
+            color: #333;
+            margin-bottom: 15px;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 10px;
+        }
+        
+        .order-details p {
+            margin: 8px 0;
+            color: #555;
+        }
+        
+        @media (max-width: 768px) {
+            .language-switcher {
+                margin-right: 10px;
+                margin-left: 0;
+            }
+            
+            .lang-btn {
+                padding: 6px 12px;
+                font-size: 14px;
+            }
+            
+            .cart-item-quantity {
+                margin-left: 0;
+            }
+
+            .cart-item {
+                flex-direction: column;
+                text-align: center;
+                gap: 15px;
+            }
+            
+            .cart-item-image {
+                margin-right: 0;
+                margin-left: 0;
+            }
+            
+            .cart-actions {
+                flex-direction: column;
+            }
+            
+            .modal-actions {
+                flex-direction: column;
+            }
+            
+            .checkout-modal {
+                padding: 20px;
+                width: 95%;
+            }
+            
+            .form-row {
+                flex-direction: column;
+                gap: 0;
+            }
+            
+            .form-row .form-group {
+                margin-bottom: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <header class="header">
+        <nav class="navbar">
+            <div class="nav-container">
+                <div class="nav-logo">
+                    <a href="EgyHome.html" class="logo">EGY<span>TOPIA</span></a>
+                </div>
+                
+                <!-- Language Toggle Button -->
+                <div class="language-switcher">
+                    <button class="lang-btn" id="langToggle">
+                        <span class="lang-text">العربية</span>
+                        <i class="fas fa-globe"></i>
+                    </button>
+                </div>
+                
+                <ul class="nav-menu">
+                    <li class="nav-item">
+                        <a href="EgyHome.html" class="nav-link" data-i18n="home">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="collection.html" class="nav-link" data-i18n="collections">Collections</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="categories.html" class="nav-link" data-i18n="categories">Categories</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="artisan.html" class="nav-link" data-i18n="userPortal">User Portal</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="our-story.html" class="nav-link" data-i18n="ourStory">Our Story</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="contact.html" class="nav-link" data-i18n="contact">Contact</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="cart.html" class="nav-link active">
+                            <i class="fas fa-shopping-cart"></i>
+                            <span class="cart-count">0</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="wishlist.html" class="nav-link">
+                            <i class="fas fa-heart"></i>
+                            <span class="wishlist-count">0</span>
+                        </a>
+                    </li>
+                </ul>
+                
+                <div class="nav-toggle">
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Cart Content -->
+    <div class="cart-container">
+        <div class="cart-content">
+            <div class="cart-header">
+                <h1 data-i18n="yourCart">Your Shopping Cart</h1>
+                <p data-i18n="reviewItems">Review your selected items</p>
+            </div>
+            
+            <div id="cart-items-container">
+                <!-- Cart items will be dynamically loaded here -->
+                <div class="empty-cart">
+                    <i class="fas fa-shopping-cart"></i>
+                    <h3 data-i18n="emptyCart">Your cart is empty</h3>
+                    <p data-i18n="browseCollections">Browse our collections and add some beautiful Egyptian treasures!</p>
+                    <a href="EgyHome.html" class="btn btn-primary" data-i18n="continueShopping">Continue Shopping</a>
+                </div>
+            </div>
+            
+            <div id="cart-summary-container" style="display: none;">
+                <div class="cart-summary">
+                    <div class="summary-row">
+                        <span data-i18n="subtotal">Subtotal:</span>
+                        <span id="subtotal">0 EGP</span>
+                    </div>
+                    <div class="summary-row">
+                        <span data-i18n="shipping">Shipping:</span>
+                        <span id="shipping">50 EGP</span>
+                    </div>
+                    <div class="summary-row">
+                        <span data-i18n="tax">Tax:</span>
+                        <span id="tax">0 EGP</span>
+                    </div>
+                    <div class="summary-row summary-total">
+                        <span data-i18n="total">Total:</span>
+                        <span id="total">0 EGP</span>
+                    </div>
+                    
+                    <div class="cart-actions">
+                        <a href="EgyHome.html" class="btn btn-secondary" style="flex: 1;" data-i18n="continueShopping">Continue Shopping</a>
+                        <button class="btn btn-primary" style="flex: 2;" id="checkout-btn" data-i18n="proceedCheckout">Proceed to Checkout</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Checkout Modal -->
+    <div class="modal-overlay" id="checkoutModal">
+        <div class="checkout-modal">
+            <div class="modal-header">
+                <h2 data-i18n="checkoutDetails">Checkout Details</h2>
+                <p data-i18n="completeOrder">Complete your order by providing the required information</p>
+            </div>
+            
+            <div class="payment-methods">
+                <div class="payment-method" data-method="credit-card">
+                    <div class="payment-icon">
+                        <i class="fas fa-credit-card"></i>
+                    </div>
+                    <div class="payment-info">
+                        <h4 data-i18n="creditCard">Credit/Debit Card</h4>
+                        <p data-i18n="paySecurely">Pay securely with your card</p>
+                    </div>
+                </div>
+                
+                <div class="payment-method" data-method="cash">
+                    <div class="payment-icon">
+                        <i class="fas fa-money-bill-wave"></i>
+                    </div>
+                    <div class="payment-info">
+                        <h4 data-i18n="cashOnDelivery">Cash on Delivery</h4>
+                        <p data-i18n="payWhenReceive">Pay when you receive your order</p>
+                    </div>
+                </div>
+                
+                <div class="payment-method" data-method="paypal">
+                    <div class="payment-icon">
+                        <i class="fab fa-paypal"></i>
+                    </div>
+                    <div class="payment-info">
+                        <h4>PayPal</h4>
+                        <p data-i18n="payWithPaypal">Pay with your PayPal account</p>
+                    </div>
+                </div>
+                
+                <div class="payment-method" data-method="vodafone-cash">
+                    <div class="payment-icon">
+                        <i class="fas fa-mobile-alt"></i>
+                    </div>
+                    <div class="payment-info">
+                        <h4 data-i18n="vodafoneCash">Vodafone Cash</h4>
+                        <p data-i18n="useVodafoneCash">Pay using Vodafone Cash wallet</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Contact and Address Form -->
+            <div class="contact-form" id="contactForm">
+                <h3 style="margin-bottom: 20px; color: #c19b53;" data-i18n="contactInfo">Contact & Shipping Information</h3>
+                
+                <form id="checkoutForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="fullName" class="required" data-i18n="fullName">Full Name</label>
+                            <input type="text" id="fullName" name="fullName" required data-i18n-placeholder="enterFullName" placeholder="Enter your full name">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="phone" class="required" data-i18n="phoneNumber">Phone Number</label>
+                            <input type="tel" id="phone" name="phone" required data-i18n-placeholder="phoneExample" placeholder="e.g., +201234567890">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="email" class="required" data-i18n="emailAddress">Email Address</label>
+                        <input type="email" id="email" name="email" required data-i18n-placeholder="emailExample" placeholder="your@email.com">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="address" class="required" data-i18n="shippingAddress">Shipping Address</label>
+                        <textarea id="address" name="address" rows="3" required data-i18n-placeholder="enterShippingAddress" placeholder="Enter your complete shipping address"></textarea>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="city" class="required" data-i18n="city">City</label>
+                            <input type="text" id="city" name="city" required data-i18n-placeholder="cityExample" placeholder="e.g., Cairo">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="zipCode" class="required" data-i18n="zipCode">ZIP/Postal Code</label>
+                            <input type="text" id="zipCode" name="zipCode" required data-i18n-placeholder="postalCode" placeholder="Postal code">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="country" class="required" data-i18n="country">Country</label>
+                        <select id="country" name="country" required>
+                            <option value="" data-i18n="selectCountry">Select Country</option>
+                            <option value="Egypt" selected>Egypt</option>
+                            <option value="Saudi Arabia">Saudi Arabia</option>
+                            <option value="UAE">United Arab Emirates</option>
+                            <option value="USA">United States</option>
+                            <option value="UK">United Kingdom</option>
+                            <option value="Germany">Germany</option>
+                            <option value="France">France</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="specialInstructions" data-i18n="specialInstructions">Special Delivery Instructions (Optional)</label>
+                        <textarea id="specialInstructions" name="specialInstructions" rows="2" data-i18n-placeholder="anyInstructions" placeholder="Any special instructions for delivery"></textarea>
+                    </div>
+                    
+                    <!-- Payment Specific Information -->
+                    <div id="paymentSpecificInfo" class="payment-specific-info" style="display: none;">
+                        <!-- Will be dynamically filled based on payment method -->
+                    </div>
+                </form>
+            </div>
+            
+            <div class="modal-actions">
+                <button class="btn btn-secondary" id="cancel-btn" data-i18n="cancel">Cancel</button>
+                <button class="btn btn-primary" id="next-btn" style="display: none;" data-i18n="next">Next</button>
+                <button class="btn btn-primary" id="confirm-payment-btn" style="display: none;" data-i18n="confirmOrder">Confirm Order</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Modal -->
+    <div class="modal-overlay" id="successModal">
+        <div class="checkout-modal success-modal">
+            <div class="modal-header">
+                <i class="fas fa-check-circle"></i>
+                <h2 data-i18n="orderConfirmed">Order Confirmed!</h2>
+                <p data-i18n="orderPlaced">Your order has been placed successfully.</p>
+                
+                <div class="order-details" id="orderDetails">
+                    <!-- Order details will be inserted here -->
+                </div>
+            </div>
+            
+            <div class="modal-actions">
+                <button class="btn btn-primary" id="continue-shopping-btn" data-i18n="continueShopping">Continue Shopping</button>
+                <button class="btn btn-secondary" id="print-receipt-btn" data-i18n="printReceipt">Print Receipt</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // All cart functionality in one file
+        let currentLanguage = 'en';
+        
+        // Translations for cart page
+        const cartTranslations = {
+            en: {
+                // Navigation
+                home: "Home",
+                collections: "Collections",
+                categories: "Categories",
+                userPortal: "User Portal",
+                ourStory: "Our Story",
+                contact: "Contact",
+                
+                // Cart Content
+                yourCart: "Your Shopping Cart",
+                reviewItems: "Review your selected items",
+                emptyCart: "Your cart is empty",
+                browseCollections: "Browse our collections and add some beautiful Egyptian treasures!",
+                continueShopping: "Continue Shopping",
+                subtotal: "Subtotal:",
+                shipping: "Shipping:",
+                tax: "Tax:",
+                total: "Total:",
+                proceedCheckout: "Proceed to Checkout",
+                remove: "Remove",
+                
+                // Checkout Modal
+                checkoutDetails: "Checkout Details",
+                completeOrder: "Complete your order by providing the required information",
+                creditCard: "Credit/Debit Card",
+                paySecurely: "Pay securely with your card",
+                cashOnDelivery: "Cash on Delivery",
+                payWhenReceive: "Pay when you receive your order",
+                payWithPaypal: "Pay with your PayPal account",
+                vodafoneCash: "Vodafone Cash",
+                useVodafoneCash: "Pay using Vodafone Cash wallet",
+                contactInfo: "Contact & Shipping Information",
+                fullName: "Full Name",
+                enterFullName: "Enter your full name",
+                phoneNumber: "Phone Number",
+                phoneExample: "e.g., +201234567890",
+                emailAddress: "Email Address",
+                emailExample: "your@email.com",
+                shippingAddress: "Shipping Address",
+                enterShippingAddress: "Enter your complete shipping address",
+                city: "City",
+                cityExample: "e.g., Cairo",
+                zipCode: "ZIP/Postal Code",
+                postalCode: "Postal code",
+                country: "Country",
+                selectCountry: "Select Country",
+                specialInstructions: "Special Delivery Instructions (Optional)",
+                anyInstructions: "Any special instructions for delivery",
+                cancel: "Cancel",
+                next: "Next",
+                confirmOrder: "Confirm Order",
+                
+                // Success Modal
+                orderConfirmed: "Order Confirmed!",
+                orderPlaced: "Your order has been placed successfully.",
+                printReceipt: "Print Receipt",
+                
+                // Payment Specific Info
+                creditCardInfo: "You will be redirected to our secure payment gateway to complete your card payment. We accept Visa, MasterCard, and American Express.",
+                cashInfo: "Please prepare exact cash for the delivery person. Our delivery executive will contact you 30 minutes before arrival. Note: A 10 EGP extra charge applies for COD orders.",
+                paypalInfo: "You will be redirected to PayPal to complete your payment securely. Ensure your PayPal account has sufficient balance or linked payment method.",
+                vodafoneInfo: "Please send the payment to our Vodafone Cash number: <strong>0100 123 4567</strong> Include your order number in the payment note. Our team will verify within 15 minutes.",
+                
+                // Order Details
+                orderDetails: "Order Details",
+                orderNumber: "Order Number:",
+                customer: "Customer:",
+                email: "Email:",
+                shippingTo: "Shipping Address:",
+                paymentMethod: "Payment Method:",
+                orderDate: "Order Date:",
+                deliveryNote: "Your order will be delivered within 3-5 business days",
+                
+                // Validation Messages
+                selectPayment: "Please select a payment method first",
+                fillRequired: "Please fill in all required fields correctly",
+                validEmail: "Please enter a valid email address",
+                validPhone: "Please enter a valid phone number (at least 10 digits)",
+                cartEmpty: "Your cart is empty!",
+                orderSuccess: "Order placed successfully!"
+            },
+            
+            ar: {
+                // Navigation
+                home: "الرئيسية",
+                collections: "المجموعات",
+                categories: "الفئات",
+                userPortal: "بوابة المستخدم",
+                ourStory: "قصتنا",
+                contact: "اتصل بنا",
+                
+                // Cart Content
+                yourCart: "سلة التسوق الخاصة بك",
+                reviewItems: "راجع العناصر المحددة الخاصة بك",
+                emptyCart: "سلة التسوق الخاصة بك فارغة",
+                browseCollections: "تصفح مجموعاتنا وأضف بعض الكنوز المصرية الجميلة!",
+                continueShopping: "مواصلة التسوق",
+                subtotal: "المجموع الفرعي:",
+                shipping: "الشحن:",
+                tax: "الضريبة:",
+                total: "الإجمالي:",
+                proceedCheckout: "المتابعة للدفع",
+                remove: "إزالة",
+                
+                // Checkout Modal
+                checkoutDetails: "تفاصيل الدفع",
+                completeOrder: "أكمل طلبك من خلال تقديم المعلومات المطلوبة",
+                creditCard: "بطاقة ائتمان/مدينة",
+                paySecurely: "ادفع بأمان باستخدام بطاقتك",
+                cashOnDelivery: "الدفع عند الاستلام",
+                payWhenReceive: "ادفع عند استلام طلبك",
+                payWithPaypal: "ادفع باستخدام حساب PayPal الخاص بك",
+                vodafoneCash: "فودافون كاش",
+                useVodafoneCash: "ادفع باستخدام محفظة فودافون كاش",
+                contactInfo: "معلومات الاتصال والشحن",
+                fullName: "الاسم الكامل",
+                enterFullName: "أدخل اسمك الكامل",
+                phoneNumber: "رقم الهاتف",
+                phoneExample: "مثال: +201234567890",
+                emailAddress: "عنوان البريد الإلكتروني",
+                emailExample: "بريدك@الإلكتروني.com",
+                shippingAddress: "عنوان الشحن",
+                enterShippingAddress: "أدخل عنوان الشحن الكامل",
+                city: "المدينة",
+                cityExample: "مثال: القاهرة",
+                zipCode: "الرمز البريدي",
+                postalCode: "الرمز البريدي",
+                country: "البلد",
+                selectCountry: "اختر البلد",
+                specialInstructions: "تعليمات توصيل خاصة (اختياري)",
+                anyInstructions: "أي تعليمات خاصة للتوصيل",
+                cancel: "إلغاء",
+                next: "التالي",
+                confirmOrder: "تأكيد الطلب",
+                
+                // Success Modal
+                orderConfirmed: "تم تأكيد الطلب!",
+                orderPlaced: "تم تقديم طلبك بنجاح.",
+                printReceipt: "طباعة الإيصال",
+                
+                // Payment Specific Info
+                creditCardInfo: "سيتم إعادة توجيهك إلى بوابة الدفع الآمنة الخاصة بنا لإكمال الدفع ببطاقتك. نقبل فيزا، ماستركارد، وأمريكان إكسبريس.",
+                cashInfo: "يرجى تحضير النقد بالضبط لشخص التوصيل. سيتصل بك مندوب التوصيل قبل 30 دقيقة من الوصول. ملاحظة: تنطبق رسوم إضافية قدرها 10 جنيهات على طلبات الدفع عند الاستلام.",
+                paypalInfo: "سيتم إعادة توجيهك إلى PayPal لإكمال الدفع بأمان. تأكد من أن حساب PayPal الخاص بك لديه رصيد كافٍ أو طريقة دفع مرتبطة.",
+                vodafoneInfo: "يرجى إرسال الدفع إلى رقم فودافون كاش الخاص بنا: <strong>0100 123 4567</strong> قم بتضمين رقم طلبك في ملاحظة الدفع. سيتحقق فريقنا خلال 15 دقيقة.",
+                
+                // Order Details
+                orderDetails: "تفاصيل الطلب",
+                orderNumber: "رقم الطلب:",
+                customer: "العميل:",
+                email: "البريد الإلكتروني:",
+                shippingTo: "عنوان الشحن:",
+                paymentMethod: "طريقة الدفع:",
+                orderDate: "تاريخ الطلب:",
+                deliveryNote: "سيتم توصيل طلبك خلال 3-5 أيام عمل",
+                
+                // Validation Messages
+                selectPayment: "يرجى اختيار طريقة الدفع أولاً",
+                fillRequired: "يرجى ملء جميع الحقول المطلوبة بشكل صحيح",
+                validEmail: "يرجى إدخال عنوان بريد إلكتروني صالح",
+                validPhone: "يرجى إدخال رقم هاتف صالح (10 أرقام على الأقل)",
+                cartEmpty: "سلة التسوق الخاصة بك فارغة!",
+                orderSuccess: "تم تقديم الطلب بنجاح!"
+            }
+        };
+
+        // Cart Manager
+        const cartManager = {
+            getCartItems: function() {
+                try {
+                    return JSON.parse(localStorage.getItem('egytopiaCart') || '[]');
+                } catch (e) {
+                    console.error('Error getting cart:', e);
+                    return [];
+                }
+            },
+            
+            addToCart: function(product) {
+                try {
+                    let cart = JSON.parse(localStorage.getItem('egytopiaCart') || '[]');
+                    const existingItem = cart.find(item => item.id === product.id);
+                    
+                    if (existingItem) {
+                        existingItem.quantity = (existingItem.quantity || 1) + 1;
+                    } else {
+                        product.quantity = 1;
+                        cart.push(product);
+                    }
+                    
+                    localStorage.setItem('egytopiaCart', JSON.stringify(cart));
+                    this.updateCartCount();
+                    
+                } catch (e) {
+                    console.error('Error adding to cart:', e);
+                }
+            },
+            
+            removeFromCart: function(productId) {
+                try {
+                    let cart = JSON.parse(localStorage.getItem('egytopiaCart') || '[]');
+                    cart = cart.filter(item => item.id !== productId);
+                    localStorage.setItem('egytopiaCart', JSON.stringify(cart));
+                    this.updateCartCount();
+                    
+                } catch (e) {
+                    console.error('Error removing from cart:', e);
+                }
+            },
+            
+            updateQuantity: function(productId, change) {
+                try {
+                    let cart = JSON.parse(localStorage.getItem('egytopiaCart') || '[]');
+                    const item = cart.find(item => item.id === productId);
+                    
+                    if (item) {
+                        item.quantity = Math.max(1, (item.quantity || 1) + change);
+                        
+                        if (item.quantity === 0) {
+                            cart = cart.filter(i => i.id !== productId);
+                        }
+                        
+                        localStorage.setItem('egytopiaCart', JSON.stringify(cart));
+                        this.updateCartCount();
+                    }
+                    
+                } catch (e) {
+                    console.error('Error updating quantity:', e);
+                }
+            },
+            
+            getCartTotal: function() {
+                try {
+                    const cart = JSON.parse(localStorage.getItem('egytopiaCart') || '[]');
+                    return cart.reduce((total, item) => {
+                        const price = parseFloat(item.numericPrice) || 0;
+                        const quantity = item.quantity || 1;
+                        return total + (price * quantity);
+                    }, 0);
+                } catch (e) {
+                    console.error('Error calculating total:', e);
+                    return 0;
+                }
+            },
+            
+            updateCartCount: function() {
+                try {
+                    const cart = JSON.parse(localStorage.getItem('egytopiaCart') || '[]');
+                    const countElements = document.querySelectorAll('.cart-count');
+                    countElements.forEach(el => {
+                        el.textContent = cart.reduce((sum, item) => sum + (item.quantity || 1), 0);
+                    });
+                } catch (e) {
+                    console.error('Error updating cart count:', e);
+                }
+            },
+            
+            clearCart: function() {
+                localStorage.removeItem('egytopiaCart');
+                this.updateCartCount();
+            },
+            
+            updateWishlistCount: function() {
+                try {
+                    const wishlist = JSON.parse(localStorage.getItem('egytopiaWishlist') || '[]');
+                    const countElements = document.querySelectorAll('.wishlist-count');
+                    countElements.forEach(el => {
+                        el.textContent = wishlist.length;
+                    });
+                } catch (e) {
+                    console.error('Error updating wishlist count:', e);
+                }
+            }
+        };
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize counts
+            cartManager.updateCartCount();
+            cartManager.updateWishlistCount();
+            
+            // Setup language switcher
+            setupLanguageSwitcher();
+            
+            // Load saved language preference
+            const savedLang = localStorage.getItem('egytopiaLanguage');
+            if (savedLang) {
+                currentLanguage = savedLang;
+            }
+            
+            // Apply language
+            if (savedLang === 'ar') {
+                translateCartPage();
+                updateRTLDirection();
+                updateLanguageUI();
+            }
+            
+            // Setup navigation
+            setupMobileNavigation();
+            updateActiveNavLink();
+            
+            // Load cart items
+            loadCartPage();
+            setupCartPageEvents();
+            setupCheckoutModal();
+            
+            // Listen for storage changes
+            window.addEventListener('storage', function(e) {
+                if (e.key === 'egytopiaCart') {
+                    cartManager.updateCartCount();
+                    loadCartPage();
+                }
+                if (e.key === 'egytopiaWishlist') {
+                    cartManager.updateWishlistCount();
+                }
+                if (e.key === 'egytopiaLanguage') {
+                    const newLang = localStorage.getItem('egytopiaLanguage');
+                    if (newLang !== currentLanguage) {
+                        currentLanguage = newLang;
+                        translateCartPage();
+                        updateRTLDirection();
+                        updateLanguageUI();
+                    }
+                }
+            });
+        });
+
+        function updateCartWishlistCounts() {
+            cartManager.updateCartCount();
+            cartManager.updateWishlistCount();
+        }
+
+        function setupLanguageSwitcher() {
+            const langToggle = document.getElementById('langToggle');
+            const langText = document.querySelector('.lang-text');
+            
+            if (!langToggle) return;
+            
+            // Load saved language preference
+            const savedLang = localStorage.getItem('egytopiaLanguage');
+            if (savedLang) {
+                currentLanguage = savedLang;
+            }
+            
+            updateLanguageUI();
+            
+            langToggle.addEventListener('click', function() {
+                currentLanguage = currentLanguage === 'en' ? 'ar' : 'en';
+                localStorage.setItem('egytopiaLanguage', currentLanguage);
+                updateLanguageUI();
+                translateCartPage();
+                updateRTLDirection();
+                showNotification(currentLanguage === 'en' ? 'Language changed to English' : 'تم تغيير اللغة إلى العربية', 'info');
+            });
+        }
+
+        function updateLanguageUI() {
+            const langText = document.querySelector('.lang-text');
+            const langToggle = document.getElementById('langToggle');
+            
+            if (langText) {
+                langText.textContent = currentLanguage === 'en' ? 'العربية' : 'English';
+            }
+            
+            if (langToggle) {
+                langToggle.classList.add('lang-change');
+                langToggle.style.transform = 'scale(0.95)';
+                setTimeout(() => {
+                    langToggle.style.transform = 'scale(1)';
+                    langToggle.classList.remove('lang-change');
+                }, 300);
+            }
+        }
+
+        function updateRTLDirection() {
+            if (currentLanguage === 'ar') {
+                document.body.classList.add('rtl');
+                document.body.dir = 'rtl';
+                document.documentElement.lang = 'ar';
+            } else {
+                document.body.classList.remove('rtl');
+                document.body.dir = 'ltr';
+                document.documentElement.lang = 'en';
+            }
+        }
+
+        function translateCartPage() {
+            const trans = cartTranslations[currentLanguage];
+            
+            // Update navigation
+            updateTextContent('[data-i18n="home"]', trans.home);
+            updateTextContent('[data-i18n="collections"]', trans.collections);
+            updateTextContent('[data-i18n="categories"]', trans.categories);
+            updateTextContent('[data-i18n="userPortal"]', trans.userPortal);
+            updateTextContent('[data-i18n="ourStory"]', trans.ourStory);
+            updateTextContent('[data-i18n="contact"]', trans.contact);
+            
+            // Update cart content
+            updateTextContent('[data-i18n="yourCart"]', trans.yourCart);
+            updateTextContent('[data-i18n="reviewItems"]', trans.reviewItems);
+            updateTextContent('[data-i18n="emptyCart"]', trans.emptyCart);
+            updateTextContent('[data-i18n="browseCollections"]', trans.browseCollections);
+            updateTextContent('[data-i18n="continueShopping"]', trans.continueShopping);
+            updateTextContent('[data-i18n="subtotal"]', trans.subtotal);
+            updateTextContent('[data-i18n="shipping"]', trans.shipping);
+            updateTextContent('[data-i18n="tax"]', trans.tax);
+            updateTextContent('[data-i18n="total"]', trans.total);
+            updateTextContent('[data-i18n="proceedCheckout"]', trans.proceedCheckout);
+            
+            // Update modal content
+            updateTextContent('[data-i18n="checkoutDetails"]', trans.checkoutDetails);
+            updateTextContent('[data-i18n="completeOrder"]', trans.completeOrder);
+            updateTextContent('[data-i18n="creditCard"]', trans.creditCard);
+            updateTextContent('[data-i18n="paySecurely"]', trans.paySecurely);
+            updateTextContent('[data-i18n="cashOnDelivery"]', trans.cashOnDelivery);
+            updateTextContent('[data-i18n="payWhenReceive"]', trans.payWhenReceive);
+            updateTextContent('[data-i18n="payWithPaypal"]', trans.payWithPaypal);
+            updateTextContent('[data-i18n="vodafoneCash"]', trans.vodafoneCash);
+            updateTextContent('[data-i18n="useVodafoneCash"]', trans.useVodafoneCash);
+            updateTextContent('[data-i18n="contactInfo"]', trans.contactInfo);
+            updateTextContent('[data-i18n="fullName"]', trans.fullName);
+            updateTextContent('[data-i18n="phoneNumber"]', trans.phoneNumber);
+            updateTextContent('[data-i18n="emailAddress"]', trans.emailAddress);
+            updateTextContent('[data-i18n="shippingAddress"]', trans.shippingAddress);
+            updateTextContent('[data-i18n="city"]', trans.city);
+            updateTextContent('[data-i18n="zipCode"]', trans.zipCode);
+            updateTextContent('[data-i18n="country"]', trans.country);
+            updateTextContent('[data-i18n="selectCountry"]', trans.selectCountry);
+            updateTextContent('[data-i18n="specialInstructions"]', trans.specialInstructions);
+            updateTextContent('[data-i18n="cancel"]', trans.cancel);
+            updateTextContent('[data-i18n="next"]', trans.next);
+            updateTextContent('[data-i18n="confirmOrder"]', trans.confirmOrder);
+            updateTextContent('[data-i18n="orderConfirmed"]', trans.orderConfirmed);
+            updateTextContent('[data-i18n="orderPlaced"]', trans.orderPlaced);
+            updateTextContent('[data-i18n="printReceipt"]', trans.printReceipt);
+            
+            // Update placeholders
+            updatePlaceholder('[data-i18n-placeholder="enterFullName"]', trans.enterFullName);
+            updatePlaceholder('[data-i18n-placeholder="phoneExample"]', trans.phoneExample);
+            updatePlaceholder('[data-i18n-placeholder="emailExample"]', trans.emailExample);
+            updatePlaceholder('[data-i18n-placeholder="enterShippingAddress"]', trans.enterShippingAddress);
+            updatePlaceholder('[data-i18n-placeholder="cityExample"]', trans.cityExample);
+            updatePlaceholder('[data-i18n-placeholder="postalCode"]', trans.postalCode);
+            updatePlaceholder('[data-i18n-placeholder="anyInstructions"]', trans.anyInstructions);
+            
+            // Update dynamic content
+            updateCartButtons();
+        }
+
+        function updateCartButtons() {
+            const removeButtons = document.querySelectorAll('.remove-item');
+            const trans = cartTranslations[currentLanguage];
+            
+            removeButtons.forEach(button => {
+                button.textContent = trans.remove;
+            });
+        }
+
+        function updateTextContent(selector, text) {
+            const elements = document.querySelectorAll(selector);
+            elements.forEach(element => {
+                if (element.tagName === 'INPUT' || element.tagName === 'TEXTAREA' || element.tagName === 'SELECT') {
+                    return;
+                }
+                element.textContent = text;
+            });
+        }
+
+        function updatePlaceholder(selector, text) {
+            const elements = document.querySelectorAll(selector);
+            elements.forEach(element => {
+                element.placeholder = text;
+            });
+        }
+
+        function loadCartPage() {
+            const cartItems = cartManager.getCartItems();
+            const cartContainer = document.getElementById('cart-items-container');
+            const summaryContainer = document.getElementById('cart-summary-container');
+            const trans = cartTranslations[currentLanguage || 'en'];
+            
+            if (cartItems.length === 0) {
+                cartContainer.innerHTML = `
+                    <div class="empty-cart">
+                        <i class="fas fa-shopping-cart"></i>
+                        <h3 data-i18n="emptyCart">${trans.emptyCart}</h3>
+                        <p data-i18n="browseCollections">${trans.browseCollections}</p>
+                        <a href="EgyHome.html" class="btn btn-primary" data-i18n="continueShopping">${trans.continueShopping}</a>
+                    </div>
+                `;
+                summaryContainer.style.display = 'none';
+                return;
+            }
+            
+            // Display cart items
+            cartContainer.innerHTML = `
+                <div class="cart-items">
+                    ${cartItems.map(item => `
+                        <div class="cart-item" data-id="${item.id}">
+                            <img src="${item.image || 'https://images.unsplash.com/photo-1677194370385-d7aebb01a4fd?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxlZ3lwdGlhbiUyMHBvdHRlcnklMjBjZXJhbWljfGVufDF8fHx8MTc2Mjg0NjE2NHww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral'}" 
+                                 alt="${item.title}" 
+                                 class="cart-item-image">
+                            <div class="cart-item-details">
+                                <h3 class="cart-item-title">${item.title}</h3>
+                                <div class="cart-item-price">${item.price || '0 EGP'}</div>
+                                <div class="cart-item-quantity">
+                                    <button class="quantity-btn minus">-</button>
+                                    <span class="quantity-display">${item.quantity || 1}</span>
+                                    <button class="quantity-btn plus">+</button>
+                                </div>
+                            </div>
+                            <button class="remove-item" data-i18n="remove">${trans.remove}</button>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+            
+            summaryContainer.style.display = 'block';
+            updateCartSummary();
+        }
+
+        function setupCartPageEvents() {
+            // Delegate events for dynamic content
+            document.getElementById('cart-items-container').addEventListener('click', function(e) {
+                const cartItem = e.target.closest('.cart-item');
+                if (!cartItem) return;
+                
+                const itemId = parseInt(cartItem.dataset.id);
+                
+                if (e.target.classList.contains('remove-item')) {
+                    removeFromCart(itemId);
+                } else if (e.target.classList.contains('plus')) {
+                    updateQuantity(itemId, 1);
+                } else if (e.target.classList.contains('minus')) {
+                    updateQuantity(itemId, -1);
+                }
+            });
+        }
+
+        function setupCheckoutModal() {
+            const checkoutBtn = document.getElementById('checkout-btn');
+            const checkoutModal = document.getElementById('checkoutModal');
+            const successModal = document.getElementById('successModal');
+            const cancelBtn = document.getElementById('cancel-btn');
+            const nextBtn = document.getElementById('next-btn');
+            const confirmPaymentBtn = document.getElementById('confirm-payment-btn');
+            const continueShoppingBtn = document.getElementById('continue-shopping-btn');
+            const printReceiptBtn = document.getElementById('print-receipt-btn');
+            const paymentMethods = document.querySelectorAll('.payment-method');
+            const contactForm = document.getElementById('contactForm');
+            const paymentSpecificInfo = document.getElementById('paymentSpecificInfo');
+            const checkoutForm = document.getElementById('checkoutForm');
+            
+            let selectedPaymentMethod = null;
+            let currentStep = 'payment'; // 'payment' or 'contact'
+            const trans = cartTranslations[currentLanguage || 'en'];
+            
+            // Payment method selection
+            paymentMethods.forEach(method => {
+                method.addEventListener('click', function() {
+                    // Remove selected class from all methods
+                    paymentMethods.forEach(m => m.classList.remove('selected'));
+                    // Add selected class to clicked method
+                    this.classList.add('selected');
+                    selectedPaymentMethod = this.dataset.method;
+                    
+                    // Show payment specific information
+                    showPaymentSpecificInfo(selectedPaymentMethod);
+                    
+                    // Show next button
+                    nextBtn.style.display = 'block';
+                    confirmPaymentBtn.style.display = 'none';
+                });
+            });
+            
+            // Show payment method specific information
+            function showPaymentSpecificInfo(method) {
+                paymentSpecificInfo.style.display = 'block';
+                
+                const infoMap = {
+                    'credit-card': trans.creditCardInfo,
+                    'cash': trans.cashInfo,
+                    'paypal': trans.paypalInfo,
+                    'vodafone-cash': trans.vodafoneInfo
+                };
+                
+                paymentSpecificInfo.innerHTML = infoMap[method] || '';
+            }
+            
+            // Open checkout modal
+            if (checkoutBtn) {
+                checkoutBtn.addEventListener('click', function() {
+                    const cartItems = cartManager.getCartItems();
+                    if (cartItems.length === 0) {
+                        alert(trans.cartEmpty);
+                        return;
+                    }
+                    
+                    // Reset form
+                    resetCheckoutForm();
+                    currentStep = 'payment';
+                    updateModalButtons();
+                    
+                    checkoutModal.classList.add('active');
+                    document.body.style.overflow = 'hidden'; // Prevent scrolling
+                });
+            }
+            
+            // Reset checkout form
+            function resetCheckoutForm() {
+                checkoutForm.reset();
+                paymentMethods.forEach(m => m.classList.remove('selected'));
+                selectedPaymentMethod = null;
+                contactForm.classList.remove('active');
+                paymentSpecificInfo.style.display = 'none';
+                document.body.style.overflow = ''; // Re-enable scrolling
+            }
+            
+            // Update modal buttons based on current step
+            function updateModalButtons() {
+                if (currentStep === 'payment') {
+                    nextBtn.style.display = selectedPaymentMethod ? 'block' : 'none';
+                    confirmPaymentBtn.style.display = 'none';
+                } else {
+                    nextBtn.style.display = 'none';
+                    confirmPaymentBtn.style.display = 'block';
+                }
+            }
+            
+            // Next button - go to contact form
+            if (nextBtn) {
+                nextBtn.addEventListener('click', function() {
+                    if (!selectedPaymentMethod) {
+                        alert(trans.selectPayment);
+                        return;
+                    }
+                    
+                    currentStep = 'contact';
+                    contactForm.classList.add('active');
+                    updateModalButtons();
+                    
+                    // Scroll to form
+                    setTimeout(() => {
+                        contactForm.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }, 100);
+                });
+            }
+            
+            // Cancel button
+            if (cancelBtn) {
+                cancelBtn.addEventListener('click', function() {
+                    checkoutModal.classList.remove('active');
+                    resetCheckoutForm();
+                    currentStep = 'payment';
+                });
+            }
+            
+            // Confirm payment/order
+            if (confirmPaymentBtn) {
+                confirmPaymentBtn.addEventListener('click', function() {
+                    // Validate form
+                    if (!validateCheckoutForm()) {
+                        return;
+                    }
+                    
+                    // Get form data
+                    const formData = new FormData(checkoutForm);
+                    const orderData = {
+                        paymentMethod: selectedPaymentMethod,
+                        customerInfo: {
+                            fullName: formData.get('fullName'),
+                            phone: formData.get('phone'),
+                            email: formData.get('email'),
+                            address: formData.get('address'),
+                            city: formData.get('city'),
+                            zipCode: formData.get('zipCode'),
+                            country: formData.get('country'),
+                            specialInstructions: formData.get('specialInstructions')
+                        },
+                        cart: cartManager.getCartItems(),
+                        orderDate: new Date().toLocaleString()
+                    };
+                    
+                    // Calculate totals
+                    const subtotal = cartManager.getCartTotal();
+                    const shipping = selectedPaymentMethod === 'cash' ? 60 : 50; // Extra 10 for COD
+                    const tax = subtotal * 0.14;
+                    const total = subtotal + shipping + tax;
+                    
+                    // Generate order number
+                    const orderNumber = 'EGY-' + Date.now().toString().slice(-8);
+                    
+                    // Display success modal with order details
+                    showSuccessModal(orderData, orderNumber, total, shipping);
+                    
+                    // Close checkout modal
+                    checkoutModal.classList.remove('active');
+                    resetCheckoutForm();
+                    
+                    // Clear the cart
+                    cartManager.clearCart();
+                    
+                    // Update cart page
+                    loadCartPage();
+                });
+            }
+            
+            // Form validation
+            function validateCheckoutForm() {
+                const requiredFields = checkoutForm.querySelectorAll('[required]');
+                let isValid = true;
+                
+                requiredFields.forEach(field => {
+                    if (!field.value.trim()) {
+                        field.style.borderColor = '#e74c3c';
+                        isValid = false;
+                        
+                        // Reset border color on input
+                        field.addEventListener('input', function() {
+                            this.style.borderColor = '#ddd';
+                        }, { once: true });
+                    }
+                });
+                
+                // Email validation
+                const emailField = document.getElementById('email');
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (emailField.value && !emailRegex.test(emailField.value)) {
+                    emailField.style.borderColor = '#e74c3c';
+                    alert(trans.validEmail);
+                    isValid = false;
+                }
+                
+                // Phone validation (basic)
+                const phoneField = document.getElementById('phone');
+                if (phoneField.value && phoneField.value.replace(/\D/g, '').length < 10) {
+                    phoneField.style.borderColor = '#e74c3c';
+                    alert(trans.validPhone);
+                    isValid = false;
+                }
+                
+                if (!isValid) {
+                    alert(trans.fillRequired);
+                }
+                
+                return isValid;
+            }
+            
+            // Show success modal with order details
+            function showSuccessModal(orderData, orderNumber, total, shipping) {
+                const orderDetailsDiv = document.getElementById('orderDetails');
+                const trans = cartTranslations[currentLanguage || 'en'];
+                
+                orderDetailsDiv.innerHTML = `
+                    <h4>${trans.orderDetails}</h4>
+                    <p><strong>${trans.orderNumber}</strong> ${orderNumber}</p>
+                    <p><strong>${trans.customer}</strong> ${orderData.customerInfo.fullName}</p>
+                    <p><strong>${trans.phoneNumber}:</strong> ${orderData.customerInfo.phone}</p>
+                    <p><strong>${trans.email}:</strong> ${orderData.customerInfo.email}</p>
+                    <p><strong>${trans.shippingTo}</strong> ${orderData.customerInfo.address}, ${orderData.customerInfo.city}, ${orderData.customerInfo.country} ${orderData.customerInfo.zipCode}</p>
+                    <p><strong>${trans.paymentMethod}</strong> ${getPaymentMethodName(orderData.paymentMethod)}</p>
+                    <p><strong>${trans.orderDate}</strong> ${orderData.orderDate}</p>
+                    <p><strong>${trans.shipping}:</strong> ${shipping} EGP</p>
+                    <p><strong>${trans.total}:</strong> <span style="color: #c19b53; font-weight: bold;">${total.toLocaleString()} EGP</span></p>
+                    ${orderData.customerInfo.specialInstructions ? `<p><strong>${trans.specialInstructions}:</strong> ${orderData.customerInfo.specialInstructions}</p>` : ''}
+                    <p style="margin-top: 15px; color: #27ae60; font-weight: bold;">
+                        <i class="fas fa-check-circle"></i> ${trans.deliveryNote}
+                    </p>
+                `;
+                
+                // Show success modal
+                successModal.classList.add('active');
+                document.body.style.overflow = 'hidden'; // Prevent scrolling
+                
+                // Log order for debugging
+                console.log('Order placed successfully:', {
+                    orderNumber,
+                    customer: orderData.customerInfo.fullName,
+                    total: total,
+                    paymentMethod: orderData.paymentMethod
+                });
+                
+                // Show notification
+                showNotification(trans.orderSuccess, 'success');
+            }
+            
+            // Continue shopping after success
+            if (continueShoppingBtn) {
+                continueShoppingBtn.addEventListener('click', function() {
+                    successModal.classList.remove('active');
+                    document.body.style.overflow = ''; // Re-enable scrolling
+                    window.location.href = 'EgyHome.html';
+                });
+            }
+            
+            // Print receipt
+            if (printReceiptBtn) {
+                printReceiptBtn.addEventListener('click', function() {
+                    window.print();
+                });
+            }
+            
+            // Close modals when clicking outside
+            [checkoutModal, successModal].forEach(modal => {
+                modal.addEventListener('click', function(e) {
+                    if (e.target === this) {
+                        this.classList.remove('active');
+                        document.body.style.overflow = '';
+                        if (this === checkoutModal) {
+                            resetCheckoutForm();
+                            currentStep = 'payment';
+                        }
+                    }
+                });
+            });
+            
+            // Close modals with Escape key
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    checkoutModal.classList.remove('active');
+                    successModal.classList.remove('active');
+                    document.body.style.overflow = '';
+                    if (checkoutModal.classList.contains('active')) {
+                        resetCheckoutForm();
+                        currentStep = 'payment';
+                    }
+                }
+            });
+        }
+        
+        function getPaymentMethodName(method) {
+            const methodNames = {
+                'credit-card': cartTranslations[currentLanguage || 'en'].creditCard,
+                'cash': cartTranslations[currentLanguage || 'en'].cashOnDelivery,
+                'paypal': 'PayPal',
+                'vodafone-cash': cartTranslations[currentLanguage || 'en'].vodafoneCash
+            };
+            return methodNames[method] || method;
+        }
+
+        function removeFromCart(itemId) {
+            cartManager.removeFromCart(itemId);
+            loadCartPage();
+        }
+
+        function updateQuantity(itemId, change) {
+            cartManager.updateQuantity(itemId, change);
+            loadCartPage();
+        }
+
+        function updateCartSummary() {
+            const subtotal = cartManager.getCartTotal();
+            const shipping = 50;
+            const tax = subtotal * 0.14; // 14% tax
+            const total = subtotal + shipping + tax;
+            
+            document.getElementById('subtotal').textContent = `${subtotal.toLocaleString()} EGP`;
+            document.getElementById('shipping').textContent = `${shipping.toLocaleString()} EGP`;
+            document.getElementById('tax').textContent = `${tax.toLocaleString()} EGP`;
+            document.getElementById('total').textContent = `${total.toLocaleString()} EGP`;
+        }
+
+        function showNotification(message, type = 'success') {
+            const existing = document.querySelector('.notification');
+            if (existing) existing.remove();
+            
+            const n = document.createElement('div');
+            n.className = `notification ${type}`;
+            n.textContent = message;
+            n.style.cssText = `
+                position: fixed;
+                top: 90px;
+                right: 20px;
+                background: ${type === 'success' ? '#1a2f3a' : type === 'error' ? '#e74c3c' : '#3498db'};
+                color: #e9d8b6;
+                padding: 15px 20px;
+                border-radius: 12px;
+                box-shadow: 0 6px 18px rgba(0,0,0,0.15);
+                z-index: 10000;
+                transition: opacity 0.4s ease;
+            `;
+            document.body.appendChild(n);
+            setTimeout(() => { n.style.opacity = '0'; setTimeout(() => n.remove(), 400); }, 4000);
+        }
+
+        function updateActiveNavLink() {
+            const currentPage = window.location.pathname.split('/').pop() || 'EgyHome.html';
+            const navLinks = document.querySelectorAll('.nav-link');
+
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                const href = link.getAttribute('href');
+                
+                if (!href || href === '#') return;
+                
+                if ((currentPage === '' || currentPage === 'EgyHome.html' || currentPage === 'index.html') && 
+                    (href === 'EgyHome.html' || href === 'index.html' || href === './')) {
+                    link.classList.add('active');
+                } else if (href === currentPage) {
+                    link.classList.add('active');
+                } else if (currentPage.startsWith(href.replace('.html', ''))) {
+                    link.classList.add('active');
+                }
+            });
+        }
+
+        function setupMobileNavigation() {
+            const navToggle = document.querySelector('.nav-toggle');
+            const navMenu = document.querySelector('.nav-menu');
+
+            if (navToggle && navMenu) {
+                navToggle.addEventListener('click', function () {
+                    navMenu.classList.toggle('active');
+                    navToggle.classList.toggle('active');
+                    document.body.style.overflow = navMenu.classList.contains('active') ? 'hidden' : 'auto';
+                });
+
+                const navLinks = document.querySelectorAll('.nav-link');
+                navLinks.forEach(link => {
+                    link.addEventListener('click', () => {
+                        navMenu.classList.remove('active');
+                        navToggle.classList.remove('active');
+                        document.body.style.overflow = 'auto';
+                    });
+                });
+                
+                document.addEventListener('click', function(event) {
+                    if (navMenu.classList.contains('active') && 
+                        !navMenu.contains(event.target) && 
+                        !navToggle.contains(event.target)) {
+                        navMenu.classList.remove('active');
+                        navToggle.classList.remove('active');
+                        document.body.style.overflow = 'auto';
+                    }
+                });
+            }
+        }
+        
+        // Export for debugging
+        window.cartPage = {
+            currentLanguage,
+            translateCartPage,
+            updateRTLDirection,
+            debug: function() {
+                console.log('=== Cart Page Debug ===');
+                console.log('Language:', currentLanguage);
+                console.log('RTL:', document.body.classList.contains('rtl'));
+                console.log('Cart items:', cartManager.getCartItems());
+                console.log('Cart total:', cartManager.getCartTotal());
+            }
+        };
+    </script>
+</body>
+</html>

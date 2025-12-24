@@ -1,0 +1,785 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wishlist - Egytopia</title>
+    <link rel="stylesheet" href="EGYHome.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Language Switcher Styles */
+        .language-switcher {
+            margin-left: auto;
+            margin-right: 20px;
+        }
+        
+        .lang-btn {
+            background: transparent;
+            border: 2px solid #c19b53;
+            color: #1a2f3a;
+            padding: 8px 16px;
+            border-radius: 25px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .lang-btn:hover {
+            background: #c19b53;
+            color: white;
+            transform: scale(1.05);
+        }
+        
+        .lang-text {
+            font-size: 14px;
+        }
+        
+        /* RTL Support */
+        .rtl {
+            direction: rtl;
+            text-align: right;
+        }
+        
+        .rtl .wishlist-header,
+        .rtl .empty-wishlist,
+        .rtl .wishlist-item-details {
+            direction: rtl;
+        }
+        
+        .rtl .wishlist-heart {
+            right: auto;
+            left: 15px;
+        }
+        
+        .rtl .wishlist-item-actions {
+            align-items: flex-end;
+        }
+        
+        /* Wishlist Styles */
+        .wishlist-container {
+            margin-top: 100px;
+            padding: 40px 20px;
+            min-height: 60vh;
+        }
+        
+        .wishlist-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .wishlist-header h1 {
+            color: #c19b53;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .wishlist-content {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        
+        .wishlist-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        .wishlist-item {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+            position: relative;
+        }
+        
+        .wishlist-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        }
+        
+        .wishlist-item-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+        
+        .wishlist-item-details {
+            padding: 20px;
+        }
+        
+        .wishlist-item-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        
+        .wishlist-item-price {
+            color: #c19b53;
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+        }
+        
+        .wishlist-item-actions {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 2px;
+        }
+        
+        .btn-small {
+            padding: 8px 15px;
+            font-size: 0.9rem;
+            flex: 1;
+            width: 100%;
+            text-align: center;
+        }
+        
+        .remove-wishlist {
+            background: none;
+            border: 1px solid #e74c3c;
+            color: #e74c3c;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .remove-wishlist:hover {
+            background: #e74c3c;
+            color: white;
+        }
+        
+        .empty-wishlist {
+            text-align: center;
+            padding: 60px 20px;
+        }
+        
+        .empty-wishlist i {
+            font-size: 4rem;
+            color: #ddd;
+            margin-bottom: 20px;
+        }
+        
+        .empty-wishlist h3 {
+            color: #666;
+            margin-bottom: 20px;
+        }
+        
+        .wishlist-heart {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            color: #c19b53;
+        }
+        
+        .wishlist-heart.active {
+            background: #c19b53;
+            color: white;
+        }
+        
+        @media (max-width: 768px) {
+            .language-switcher {
+                margin-right: 10px;
+                margin-left: 0;
+            }
+            
+            .lang-btn {
+                padding: 6px 12px;
+                font-size: 14px;
+            }
+            
+            .wishlist-grid {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+                gap: 20px;
+            }
+            
+            .wishlist-item-actions {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <header class="header">
+        <nav class="navbar">
+            <div class="nav-container">
+                <div class="nav-logo">
+                    <a href="EgyHome.html" class="logo">EGY<span>TOPIA</span></a>
+                </div>
+                
+                <!-- Language Toggle Button -->
+                <div class="language-switcher">
+                    <button class="lang-btn" id="langToggle">
+                        <span class="lang-text">العربية</span>
+                        <i class="fas fa-globe"></i>
+                    </button>
+                </div>
+                
+                <ul class="nav-menu">
+                    <li class="nav-item">
+                        <a href="EgyHome.html" class="nav-link" data-i18n="home">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="collection.html" class="nav-link" data-i18n="collections">Collections</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="categories.html" class="nav-link" data-i18n="categories">Categories</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="artisan.html" class="nav-link" data-i18n="userPortal">User Portal</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="our-story.html" class="nav-link" data-i18n="ourStory">Our Story</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="contact.html" class="nav-link" data-i18n="contact">Contact</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="cart.html" class="nav-link">
+                            <i class="fas fa-shopping-cart"></i>
+                            <span class="cart-count">0</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="wishlist.html" class="nav-link active">
+                            <i class="fas fa-heart"></i>
+                            <span class="wishlist-count">0</span>
+                        </a>
+                    </li>
+                </ul>
+                
+                <div class="nav-toggle">
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Wishlist Content -->
+    <div class="wishlist-container">
+        <div class="wishlist-content">
+            <div class="wishlist-header">
+                <h1 data-i18n="yourWishlist">Your Wishlist</h1>
+                <p data-i18n="saveItems">Save your favorite items for later</p>
+            </div>
+            
+            <div id="wishlist-items-container">
+                <!-- Wishlist items will be dynamically loaded here -->
+                <div class="empty-wishlist">
+                    <i class="fas fa-heart"></i>
+                    <h3 data-i18n="emptyWishlist">Your wishlist is empty</h3>
+                    <p data-i18n="startAdding">Start adding items you love to your wishlist!</p>
+                    <a href="EgyHome.html" class="btn btn-primary" data-i18n="exploreProducts">Explore Products</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // All wishlist functionality in one file
+        let currentLanguage = 'en';
+        
+        // Translations for wishlist page
+        const wishlistTranslations = {
+            en: {
+                // Navigation
+                home: "Home",
+                collections: "Collections",
+                categories: "Categories",
+                userPortal: "User Portal",
+                ourStory: "Our Story",
+                contact: "Contact",
+                
+                // Wishlist Content
+                yourWishlist: "Your Wishlist",
+                saveItems: "Save your favorite items for later",
+                emptyWishlist: "Your wishlist is empty",
+                startAdding: "Start adding items you love to your wishlist!",
+                exploreProducts: "Explore Products",
+                addToCart: "Add to Cart",
+                remove: "Remove",
+                removeWishlist: "Remove from Wishlist",
+                itemAdded: "Item added to cart!",
+                itemRemoved: "Item removed from wishlist!"
+            },
+            
+            ar: {
+                // Navigation
+                home: "الرئيسية",
+                collections: "المجموعات",
+                categories: "الفئات",
+                userPortal: "بوابة المستخدم",
+                ourStory: "قصتنا",
+                contact: "اتصل بنا",
+                
+                // Wishlist Content
+                yourWishlist: "قائمة أمنياتك",
+                saveItems: "احفظ العناصر المفضلة لديك لوقت لاحق",
+                emptyWishlist: "قائمة أمنياتك فارغة",
+                startAdding: "ابدأ بإضافة العناصر التي تحبها إلى قائمة أمنياتك!",
+                exploreProducts: "استكشاف المنتجات",
+                addToCart: "أضف إلى السلة",
+                remove: "إزالة",
+                removeWishlist: "إزالة من قائمة الأمنيات",
+                itemAdded: "تمت إضافة العنصر إلى سلة التسوق!",
+                itemRemoved: "تمت إزالة العنصر من قائمة الأمنيات!"
+            }
+        };
+
+        // Cart Manager for shared functionality
+        const cartManager = {
+            getWishlistItems: function() {
+                try {
+                    return JSON.parse(localStorage.getItem('egytopiaWishlist') || '[]');
+                } catch (e) {
+                    console.error('Error getting wishlist:', e);
+                    return [];
+                }
+            },
+            
+            toggleWishlist: function(product) {
+                try {
+                    let wishlist = JSON.parse(localStorage.getItem('egytopiaWishlist') || '[]');
+                    const index = wishlist.findIndex(item => item.id === product.id);
+                    
+                    if (index === -1) {
+                        wishlist.push(product);
+                    } else {
+                        wishlist.splice(index, 1);
+                    }
+                    
+                    localStorage.setItem('egytopiaWishlist', JSON.stringify(wishlist));
+                    
+                    // Update counts
+                    const countElements = document.querySelectorAll('.wishlist-count');
+                    countElements.forEach(el => {
+                        el.textContent = wishlist.length;
+                    });
+                    
+                    // Dispatch event
+                    window.dispatchEvent(new Event('wishlistUpdated'));
+                    
+                } catch (e) {
+                    console.error('Error toggling wishlist:', e);
+                }
+            },
+            
+            addToCart: function(product) {
+                try {
+                    let cart = JSON.parse(localStorage.getItem('egytopiaCart') || '[]');
+                    cart.push(product);
+                    localStorage.setItem('egytopiaCart', JSON.stringify(cart));
+                    
+                    // Update counts
+                    const countElements = document.querySelectorAll('.cart-count');
+                    countElements.forEach(el => {
+                        el.textContent = cart.length;
+                    });
+                    
+                    // Dispatch event
+                    window.dispatchEvent(new Event('cartUpdated'));
+                    
+                } catch (e) {
+                    console.error('Error adding to cart:', e);
+                }
+            },
+            
+            getCartItems: function() {
+                try {
+                    return JSON.parse(localStorage.getItem('egytopiaCart') || '[]');
+                } catch (e) {
+                    console.error('Error getting cart:', e);
+                    return [];
+                }
+            }
+        };
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Update cart and wishlist counts
+            updateCartWishlistCounts();
+            
+            // Setup language switcher
+            setupLanguageSwitcher();
+            
+            // Load saved language preference
+            const savedLang = localStorage.getItem('egytopiaLanguage');
+            if (savedLang) {
+                currentLanguage = savedLang;
+            }
+            
+            // Apply language
+            if (savedLang === 'ar') {
+                translateWishlistPage();
+                updateRTLDirection();
+                updateLanguageUI();
+            }
+            
+            // Setup navigation
+            setupMobileNavigation();
+            updateActiveNavLink();
+            
+            // Load wishlist items
+            loadWishlistPage();
+            setupWishlistPageEvents();
+        });
+
+        function updateCartWishlistCounts() {
+            // Cart count
+            try {
+                const cart = JSON.parse(localStorage.getItem('egytopiaCart') || '[]');
+                const cartCountElements = document.querySelectorAll('.cart-count');
+                cartCountElements.forEach(el => {
+                    el.textContent = cart.length;
+                });
+            } catch (e) {
+                console.error('Error updating cart count:', e);
+            }
+            
+            // Wishlist count
+            try {
+                const wishlist = JSON.parse(localStorage.getItem('egytopiaWishlist') || '[]');
+                const wishlistCountElements = document.querySelectorAll('.wishlist-count');
+                wishlistCountElements.forEach(el => {
+                    el.textContent = wishlist.length;
+                });
+            } catch (e) {
+                console.error('Error updating wishlist count:', e);
+            }
+        }
+
+        function setupLanguageSwitcher() {
+            const langToggle = document.getElementById('langToggle');
+            const langText = document.querySelector('.lang-text');
+            
+            if (!langToggle) return;
+            
+            // Load saved language preference
+            const savedLang = localStorage.getItem('egytopiaLanguage');
+            if (savedLang) {
+                currentLanguage = savedLang;
+            }
+            
+            updateLanguageUI();
+            
+            langToggle.addEventListener('click', function() {
+                currentLanguage = currentLanguage === 'en' ? 'ar' : 'en';
+                localStorage.setItem('egytopiaLanguage', currentLanguage);
+                updateLanguageUI();
+                translateWishlistPage();
+                updateRTLDirection();
+                showNotification(currentLanguage === 'en' ? 'Language changed to English' : 'تم تغيير اللغة إلى العربية', 'info');
+            });
+        }
+
+        function updateLanguageUI() {
+            const langText = document.querySelector('.lang-text');
+            const langToggle = document.getElementById('langToggle');
+            
+            if (langText) {
+                langText.textContent = currentLanguage === 'en' ? 'العربية' : 'English';
+            }
+            
+            if (langToggle) {
+                langToggle.classList.add('lang-change');
+                langToggle.style.transform = 'scale(0.95)';
+                setTimeout(() => {
+                    langToggle.style.transform = 'scale(1)';
+                    langToggle.classList.remove('lang-change');
+                }, 300);
+            }
+        }
+
+        function updateRTLDirection() {
+            if (currentLanguage === 'ar') {
+                document.body.classList.add('rtl');
+                document.body.dir = 'rtl';
+                document.documentElement.lang = 'ar';
+            } else {
+                document.body.classList.remove('rtl');
+                document.body.dir = 'ltr';
+                document.documentElement.lang = 'en';
+            }
+        }
+
+        function translateWishlistPage() {
+            const trans = wishlistTranslations[currentLanguage];
+            
+            // Update navigation
+            updateTextContent('[data-i18n="home"]', trans.home);
+            updateTextContent('[data-i18n="collections"]', trans.collections);
+            updateTextContent('[data-i18n="categories"]', trans.categories);
+            updateTextContent('[data-i18n="userPortal"]', trans.userPortal);
+            updateTextContent('[data-i18n="ourStory"]', trans.ourStory);
+            updateTextContent('[data-i18n="contact"]', trans.contact);
+            
+            // Update wishlist content
+            updateTextContent('[data-i18n="yourWishlist"]', trans.yourWishlist);
+            updateTextContent('[data-i18n="saveItems"]', trans.saveItems);
+            updateTextContent('[data-i18n="emptyWishlist"]', trans.emptyWishlist);
+            updateTextContent('[data-i18n="startAdding"]', trans.startAdding);
+            updateTextContent('[data-i18n="exploreProducts"]', trans.exploreProducts);
+            
+            // Update dynamic content if loaded
+            updateWishlistButtons();
+        }
+
+        function updateWishlistButtons() {
+            const addToCartButtons = document.querySelectorAll('.add-to-cart-from-wishlist');
+            const removeButtons = document.querySelectorAll('.remove-wishlist');
+            const trans = wishlistTranslations[currentLanguage];
+            
+            addToCartButtons.forEach(button => {
+                button.innerHTML = `<i class="fas fa-shopping-cart" style="margin-right: 5px;"></i>${trans.addToCart}`;
+            });
+            
+            removeButtons.forEach(button => {
+                button.innerHTML = `<i class="fas fa-trash" style="margin-right: 5px;"></i>${trans.remove}`;
+            });
+        }
+
+        function updateTextContent(selector, text) {
+            const elements = document.querySelectorAll(selector);
+            elements.forEach(element => {
+                if (element.tagName === 'INPUT' || element.tagName === 'TEXTAREA') {
+                    return;
+                }
+                element.textContent = text;
+            });
+        }
+
+        function loadWishlistPage() {
+            const wishlistItems = cartManager.getWishlistItems();
+            const container = document.getElementById('wishlist-items-container');
+            const trans = wishlistTranslations[currentLanguage || 'en'];
+            
+            if (wishlistItems.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-wishlist">
+                        <i class="fas fa-heart"></i>
+                        <h3 data-i18n="emptyWishlist">${trans.emptyWishlist}</h3>
+                        <p data-i18n="startAdding">${trans.startAdding}</p>
+                        <a href="EgyHome.html" class="btn btn-primary" data-i18n="exploreProducts">${trans.exploreProducts}</a>
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = `
+                <div class="wishlist-grid">
+                    ${wishlistItems.map(item => `
+                        <div class="wishlist-item" data-id="${item.id}">
+                            <img src="${item.image || 'https://images.unsplash.com/photo-1677194370385-d7aebb01a4fd?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxlZ3lwdGlhbiUyMHBvdHRlcnklMjBjZXJhbWljfGVufDF8fHx8MTc2Mjg0NjE2NHww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral'}" 
+                                 alt="${item.title}" 
+                                 class="wishlist-item-image">
+                            <button class="wishlist-heart active" title="${trans.removeWishlist}">
+                                <i class="fas fa-heart"></i>
+                            </button>
+                            <div class="wishlist-item-details">
+                                <h3 class="wishlist-item-title">${item.title}</h3>
+                                <div class="wishlist-item-price">${item.price || '0 EGP'}</div>
+                                <div class="wishlist-item-actions">
+                                    <button class="btn btn-primary btn-small add-to-cart-from-wishlist">
+                                        <i class="fas fa-shopping-cart" style="margin-right: 5px;"></i>${trans.addToCart}
+                                    </button>
+                                    <button class="btn btn-secondary btn-small remove-wishlist">
+                                        <i class="fas fa-trash" style="margin-right: 5px;"></i>${trans.remove}
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+        }
+
+        function setupWishlistPageEvents() {
+            // Delegate events for dynamic content
+            const container = document.getElementById('wishlist-items-container');
+            if (!container) return;
+            
+            container.addEventListener('click', function(e) {
+                const wishlistItem = e.target.closest('.wishlist-item');
+                if (!wishlistItem) return;
+                
+                const itemId = parseInt(wishlistItem.dataset.id);
+                
+                if (e.target.classList.contains('remove-wishlist') || e.target.closest('.remove-wishlist')) {
+                    removeFromWishlist(itemId);
+                } else if (e.target.classList.contains('add-to-cart-from-wishlist') || e.target.closest('.add-to-cart-from-wishlist')) {
+                    addToCartFromWishlist(itemId);
+                } else if (e.target.classList.contains('wishlist-heart') || e.target.closest('.wishlist-heart')) {
+                    removeFromWishlist(itemId);
+                }
+            });
+        }
+
+        function removeFromWishlist(itemId) {
+            const trans = wishlistTranslations[currentLanguage || 'en'];
+            
+            // Get the item details
+            const wishlistItems = cartManager.getWishlistItems();
+            const item = wishlistItems.find(item => item.id === itemId);
+            
+            if (item) {
+                cartManager.toggleWishlist(item);
+                loadWishlistPage();
+                showNotification(trans.itemRemoved, 'info');
+            }
+        }
+
+        function addToCartFromWishlist(itemId) {
+            const trans = wishlistTranslations[currentLanguage || 'en'];
+            
+            const wishlistItems = cartManager.getWishlistItems();
+            const item = wishlistItems.find(item => item.id === itemId);
+            
+            if (item) {
+                cartManager.addToCart(item);
+                showNotification(trans.itemAdded, 'success');
+            }
+        }
+
+        function showNotification(message, type = 'success') {
+            const existing = document.querySelector('.notification');
+            if (existing) existing.remove();
+            
+            const n = document.createElement('div');
+            n.className = `notification ${type}`;
+            n.textContent = message;
+            n.style.cssText = `
+                position: fixed;
+                top: 90px;
+                right: 20px;
+                background: ${type === 'success' ? '#1a2f3a' : type === 'error' ? '#e74c3c' : '#3498db'};
+                color: #e9d8b6;
+                padding: 15px 20px;
+                border-radius: 12px;
+                box-shadow: 0 6px 18px rgba(0,0,0,0.15);
+                z-index: 10000;
+                transition: opacity 0.4s ease;
+            `;
+            document.body.appendChild(n);
+            setTimeout(() => { n.style.opacity = '0'; setTimeout(() => n.remove(), 400); }, 4000);
+        }
+
+        function updateActiveNavLink() {
+            const currentPage = window.location.pathname.split('/').pop() || 'EgyHome.html';
+            const navLinks = document.querySelectorAll('.nav-link');
+
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                const href = link.getAttribute('href');
+                
+                if (!href || href === '#') return;
+                
+                if ((currentPage === '' || currentPage === 'EgyHome.html' || currentPage === 'index.html') && 
+                    (href === 'EgyHome.html' || href === 'index.html' || href === './')) {
+                    link.classList.add('active');
+                } else if (href === currentPage) {
+                    link.classList.add('active');
+                } else if (currentPage.startsWith(href.replace('.html', ''))) {
+                    link.classList.add('active');
+                }
+            });
+        }
+
+        function setupMobileNavigation() {
+            const navToggle = document.querySelector('.nav-toggle');
+            const navMenu = document.querySelector('.nav-menu');
+
+            if (navToggle && navMenu) {
+                navToggle.addEventListener('click', function () {
+                    navMenu.classList.toggle('active');
+                    navToggle.classList.toggle('active');
+                    document.body.style.overflow = navMenu.classList.contains('active') ? 'hidden' : 'auto';
+                });
+
+                const navLinks = document.querySelectorAll('.nav-link');
+                navLinks.forEach(link => {
+                    link.addEventListener('click', () => {
+                        navMenu.classList.remove('active');
+                        navToggle.classList.remove('active');
+                        document.body.style.overflow = 'auto';
+                    });
+                });
+                
+                document.addEventListener('click', function(event) {
+                    if (navMenu.classList.contains('active') && 
+                        !navMenu.contains(event.target) && 
+                        !navToggle.contains(event.target)) {
+                        navMenu.classList.remove('active');
+                        navToggle.classList.remove('active');
+                        document.body.style.overflow = 'auto';
+                    }
+                });
+            }
+        }
+
+        // Listen for storage changes (wishlist updates from other pages)
+        window.addEventListener('storage', function(e) {
+            if (e.key === 'egytopiaWishlist' || e.key === 'egytopiaCart') {
+                updateCartWishlistCounts();
+                
+                if (e.key === 'egytopiaWishlist') {
+                    loadWishlistPage();
+                }
+            }
+            
+            if (e.key === 'egytopiaLanguage') {
+                const newLang = localStorage.getItem('egytopiaLanguage');
+                if (newLang !== currentLanguage) {
+                    currentLanguage = newLang;
+                    translateWishlistPage();
+                    updateRTLDirection();
+                    updateLanguageUI();
+                }
+            }
+        });
+        
+        // Also listen for custom events from the same tab
+        window.addEventListener('wishlistUpdated', function() {
+            updateCartWishlistCounts();
+            loadWishlistPage();
+        });
+        
+        window.addEventListener('cartUpdated', function() {
+            updateCartWishlistCounts();
+        });
+        
+        // Export for debugging
+        window.wishlistPage = {
+            currentLanguage,
+            translateWishlistPage,
+            updateRTLDirection,
+            debug: function() {
+                console.log('=== Wishlist Page Debug ===');
+                console.log('Language:', currentLanguage);
+                console.log('RTL:', document.body.classList.contains('rtl'));
+                console.log('Wishlist items:', cartManager.getWishlistItems().length);
+                console.log('Cart items:', cartManager.getCartItems().length);
+            }
+        };
+    </script>
+</body>
+</html>

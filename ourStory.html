@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EGYTOPIA Story</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="ourStory.css">
+  <style>
+    /* Language Switcher Styles */
+    .language-switcher {
+      margin-left: auto;
+      margin-right: 20px;
+    }
+    
+    .lang-btn {
+      background: transparent;
+      border: 2px solid #c19b53;
+      color: #c19b53;
+      padding: 8px 16px;
+      border-radius: 25px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+    }
+    
+    .lang-btn:hover {
+      background: #a28246;
+      color: white;
+      transform: scale(1.05);
+    }
+    
+    .lang-text {
+      font-size: 14px;
+    }
+    
+    /* RTL Support */
+    .rtl {
+      direction: rtl;
+      text-align: right;
+    }
+    
+    .rtl .hero-content,
+    .rtl .section-header,
+    .rtl .timeline,
+    .rtl .mission-vision-grid,
+    .rtl .values-grid,
+    .rtl .team-stats,
+    .rtl .cta-content,
+    .rtl .footer-content {
+      direction: rtl;
+    }
+    
+    .rtl .timeline-item:nth-child(odd) .timeline-content {
+      text-align: left;
+    }
+    
+    .rtl .timeline-item:nth-child(even) .timeline-content {
+      text-align: right;
+    }
+    
+    .rtl .cta-buttons,
+    .rtl .social-icons,
+    .rtl .links-grid {
+      justify-content: flex-end;
+    }
+    
+    .rtl .links-grid {
+      flex-direction: row-reverse;
+    }
+    
+    .rtl .contact-info {
+      justify-content: flex-end;
+      text-align: right;
+    }
+    
+    .rtl .contact-info i {
+      margin-left: 10px;
+      margin-right: 0;
+    }
+    
+    .rtl .newsletter-form {
+      flex-direction: row-reverse;
+    }
+    
+    @media (max-width: 768px) {
+      .language-switcher {
+        margin-right: 10px;
+        margin-left: 0;
+      }
+      
+      .lang-btn {
+        padding: 6px 12px;
+        font-size: 14px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Navigation Bar -->
+  <header class="header">
+    <nav class="navbar">
+      <div class="nav-container">
+        <div class="nav-logo">
+          <a href="EgyHome.html" class="logo">EGY<span>TOPIA</span></a>
+        </div>
+        
+        <!-- Language Toggle Button -->
+        <div class="language-switcher">
+          <button class="lang-btn" id="langToggle">
+            <span class="lang-text">العربية</span>
+            <i class="fas fa-globe"></i>
+          </button>
+        </div>
+
+        <ul class="nav-menu">
+          <li class="nav-item">
+            <a href="EgyHome.html" class="nav-link" data-i18n="home">Home</a>
+          </li>
+          <li class="nav-item">
+            <a href="collection.html" class="nav-link" data-i18n="collections">Collections</a>
+          </li>
+          <li class="nav-item">
+            <a href="categories.html" class="nav-link" data-i18n="categories">Categories</a>
+          </li>
+          <li class="nav-item">
+            <a href="artisan.html" class="nav-link" data-i18n="userPortal">User Portal</a>
+          </li>
+          <li class="nav-item">
+            <a href="ourStory.html" class="nav-link active" data-i18n="ourStory">Our Story</a>
+          </li>
+          <li class="nav-item">
+            <a href="contact.html" class="nav-link" data-i18n="contact">Contact</a>
+          </li>
+          <li class="nav-item">
+            <a href="cart.html" class="nav-link">
+              <i class="fas fa-shopping-cart"></i>
+              <span class="cart-count">0</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="wishlist.html" class="nav-link">
+              <i class="fas fa-heart"></i>
+              <span class="wishlist-count">0</span>
+            </a>
+          </li>
+        </ul>
+
+        <div class="nav-toggle">
+          <span class="bar"></span>
+          <span class="bar"></span>
+          <span class="bar"></span>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  
+  <!-- Hero Section -->
+  <section class="story-hero">
+    <div class="container">
+      <div class="hero-content">
+        <span class="hero-tag" data-i18n="ourJourney">Our Journey</span>
+        <h1 class="hero-title" data-i18n="heroTitle">Where <span data-i18n="heritage">Heritage</span> Meets Craftsmanship</h1>
+        <p class="hero-subtitle" data-i18n="heroSubtitle">
+          For over 25 years, we've been dedicated to preserving Egypt's rich cultural heritage through authentic handcrafted treasures. Every piece tells a story of ancient wisdom, artistic excellence, and the skilled hands that brought it to life.
+        </p>
+        <div class="hero-divider"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Timeline Section -->
+  <section class="timeline-section">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag" data-i18n="ourHistory">Our History</span>
+        <h2 class="section-title" data-i18n="timelineTitle">A Legacy of <span data-i18n="excellence">Excellence</span></h2>
+        <p class="section-description" data-i18n="timelineDescription">
+          Discover the milestones that shaped our journey from a small artisan workshop to Egypt's premier destination for authentic handcrafted treasures.
+        </p>
+      </div>
+
+      <div class="timeline">
+        <div class="timeline-item">
+          <div class="timeline-content">
+            <div class="timeline-year">1998</div>
+            <h3 class="timeline-title" data-i18n="timeline1Title">The Beginning</h3>
+            <p class="timeline-text" data-i18n="timeline1Text">
+              Founded by master craftsman Ahmed Hassan, Egytopia began as a small workshop in Cairo's historic district, dedicated to preserving traditional Egyptian craftsmanship.
+            </p>
+          </div>
+          <div class="timeline-dot"></div>
+        </div>
+
+        <div class="timeline-item">
+          <div class="timeline-content">
+            <div class="timeline-year">2005</div>
+            <h3 class="timeline-title" data-i18n="timeline2Title">First International Recognition</h3>
+            <p class="timeline-text" data-i18n="timeline2Text">
+              Our authentic designs caught global attention, leading to partnerships with museums and cultural institutions worldwide.
+            </p>
+          </div>
+          <div class="timeline-dot"></div>
+        </div>
+
+        <div class="timeline-item">
+          <div class="timeline-content">
+            <div class="timeline-year">2012</div>
+            <h3 class="timeline-title" data-i18n="timeline3Title">Artisan Network Expansion</h3>
+            <p class="timeline-text" data-i18n="timeline3Text">
+              We expanded our network to include over 100 skilled artisans from across Egypt, preserving diverse regional crafting traditions.
+            </p>
+          </div>
+          <div class="timeline-dot"></div>
+        </div>
+
+        <div class="timeline-item">
+          <div class="timeline-content">
+            <div class="timeline-year">2018</div>
+            <h3 class="timeline-title" data-i18n="timeline4Title">Digital Transformation</h3>
+            <p class="timeline-text" data-i18n="timeline4Text">
+              Launched our online platform, making authentic Egyptian craftsmanship accessible to enthusiasts around the world.
+            </p>
+          </div>
+          <div class="timeline-dot"></div>
+        </div>
+
+        <div class="timeline-item">
+          <div class="timeline-content">
+            <div class="timeline-year">2025</div>
+            <h3 class="timeline-title" data-i18n="timeline5Title">Today & Beyond</h3>
+            <p class="timeline-text" data-i18n="timeline5Text">
+              Continuing our mission with 5,000+ happy customers globally, while training the next generation of Egyptian artisans.
+            </p>
+          </div>
+          <div class="timeline-dot"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+    <!-- CTA Section -->
+  <section class="cta-section">
+    <div class="container">
+      <div class="cta-content">
+        <h2 class="cta-title" data-i18n="ctaTitle">Ready to Own a Piece of Egyptian History?</h2>
+        <p class="cta-text" data-i18n="ctaText">
+          Explore our curated collection of authentic handcrafted treasures, each with its own unique story and heritage.
+        </p>
+        <div class="cta-buttons">
+          <a href="collection.html" class="btn btn-primary" data-i18n="exploreCollection">Explore Collection</a>
+          <a href="contact.html" class="btn btn-secondary" data-i18n="getInTouch">Get in Touch</a>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+  <!-- Mission & Vision Section -->
+  <section class="mission-vision-section">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag" data-i18n="whatDrivesUs">What Drives Us</span>
+        <h2 class="section-title" data-i18n="missionVisionTitle">Our Mission & <span data-i18n="vision">Vision</span></h2>
+      </div>
+
+      <div class="mission-vision-grid">
+        <div class="mission-card">
+          <div class="card-icon">
+            <i class="fas fa-bullseye"></i>
+          </div>
+          <h3 class="card-title" data-i18n="ourMission">Our Mission</h3>
+          <p class="card-text" data-i18n="missionText">
+            To preserve and celebrate Egypt's rich artistic heritage by connecting skilled artisans with discerning customers worldwide. We ensure every piece is crafted with authenticity, quality, and respect for traditional techniques passed down through generations.
+          </p>
+        </div>
+
+        <div class="vision-card">
+          <div class="card-icon">
+            <i class="fas fa-eye"></i>
+          </div>
+          <h3 class="card-title" data-i18n="ourVision">Our Vision</h3>
+          <p class="card-text" data-i18n="visionText">
+            To become the world's most trusted destination for authentic Egyptian craftsmanship, empowering local artisans while educating global audiences about Egypt's timeless cultural treasures and inspiring appreciation for handmade artistry.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Values Section -->
+  <section class="values-section">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag" data-i18n="whatWeBelieve">What We Believe In</span>
+        <h2 class="section-title" data-i18n="coreValuesTitle">Our Core <span data-i18n="values">Values</span></h2>
+        <p class="section-description" data-i18n="valuesDescription">
+          These principles guide everything we do, from selecting artisans to delivering your treasured pieces.
+        </p>
+      </div>
+
+      <div class="values-grid">
+        <div class="value-card">
+          <div class="value-icon">
+            <i class="fas fa-certificate"></i>
+          </div>
+          <h4 class="value-title" data-i18n="authenticity">Authenticity</h4>
+          <p class="value-text" data-i18n="authenticityText">
+            Every piece is genuinely handcrafted using traditional Egyptian techniques and materials.
+          </p>
+        </div>
+
+        <div class="value-card">
+          <div class="value-icon">
+            <i class="fas fa-gem"></i>
+          </div>
+          <h4 class="value-title" data-i18n="quality">Quality</h4>
+          <p class="value-text" data-i18n="qualityText">
+            We maintain the highest standards in craftsmanship and materials for lasting beauty.
+          </p>
+        </div>
+
+        <div class="value-card">
+          <div class="value-icon">
+            <i class="fas fa-users"></i>
+          </div>
+          <h4 class="value-title" data-i18n="community">Community</h4>
+          <p class="value-text" data-i18n="communityText">
+            Supporting local artisans and preserving traditional crafting communities across Egypt.
+          </p>
+        </div>
+
+        <div class="value-card">
+          <div class="value-icon">
+            <i class="fas fa-leaf"></i>
+          </div>
+          <h4 class="value-title" data-i18n="sustainability">Sustainability</h4>
+          <p class="value-text" data-i18n="sustainabilityText">
+            Committed to eco-friendly practices and sustainable sourcing of all materials.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Team Section -->
+  <section class="team-section">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag" data-i18n="peopleBehind">The People Behind The Magic</span>
+        <h2 class="section-title" data-i18n="artisanCommunity">Our Artisan <span data-i18n="community">Community</span></h2>
+      </div>
+
+      <p class="team-intro" data-i18n="teamIntro">
+        Our strength lies in our people - a dedicated community of master craftsmen, designers, and cultural enthusiasts who share a passion for preserving Egypt's artistic heritage. Together, we ensure every piece reflects the excellence and authenticity our customers deserve.
+      </p>
+
+      <div class="team-stats">
+        <div class="team-stat">
+          <div class="stat-number">150+</div>
+          <div class="stat-label" data-i18n="masterArtisans">Master Artisans</div>
+        </div>
+        <div class="team-stat">
+          <div class="stat-number">25+</div>
+          <div class="stat-label" data-i18n="yearsExperience">Years Experience</div>
+        </div>
+        <div class="team-stat">
+          <div class="stat-number">12</div>
+          <div class="stat-label" data-i18n="egyptianRegions">Egyptian Regions</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- Footer -->
+  <footer class="footer-container">
+    <div class="footer-header">
+      <h1>EGYTOPIA</h1>
+      <h2 data-i18n="egyptianHeritage">Egyptian Heritage</h2>
+      <p data-i18n="footerTagline">Bringing the timeless beauty of Egyptian craftsmanship to the world.</p>
+    </div>
+
+    <div class="hieroglyphic-border"></div>
+
+    <div class="footer-content">
+      <div class="footer-section">
+        <h3 data-i18n="quickLinks">Quick Links</h3>
+        <div class="links-grid">
+          <div class="footer-links">
+            <a href="EgyHome.html" data-i18n="home">Home</a>
+            <a href="collection.html" data-i18n="collections">Collections</a>
+            <a href="ourStory.html" data-i18n="aboutUs">About Us</a>
+            <a href="#" data-i18n="blog">Blog</a>
+          </div>
+          <div class="footer-links">
+            <a href="#" data-i18n="shippingReturns">Shipping & Returns</a>
+            <a href="#" data-i18n="faq">FAQ</a>
+            <a href="#" data-i18n="privacyPolicy">Privacy Policy</a>
+            <a href="#" data-i18n="termsConditions">Terms & Conditions</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-section">
+        <h3 data-i18n="customerService">Customer Service</h3>
+        <div class="contact-info">
+          <i class="fas fa-map-marker-alt"></i>
+          <div>123 Nile Avenue, Cairo, Egypt</div>
+        </div>
+        <div class="contact-info">
+          <i class="fas fa-phone"></i>
+          <div>+20 123 456 7890</div>
+        </div>
+        <div class="contact-info">
+          <i class="fas fa-envelope"></i>
+          <div>info@egytopia.eg</div>
+        </div>
+
+        <div class="social-icons">
+          <a href="#"><i class="fab fa-facebook-f"></i></a>
+          <a href="#"><i class="fab fa-instagram"></i></a>
+          <a href="#"><i class="fab fa-pinterest"></i></a>
+          <a href="#"><i class="fab fa-twitter"></i></a>
+        </div>
+      </div>
+
+      <div class="footer-section">
+        <h3 data-i18n="subscribeNewsletter">Subscribe to Our Newsletter</h3>
+        <div class="newsletter">
+          <p data-i18n="newsletterDesc">Get exclusive offers and updates on new products</p>
+          <form class="newsletter-form">
+            <input type="email" placeholder="Enter your email" data-i18n-placeholder="emailPlaceholder" required>
+            <button type="submit" data-i18n="subscribe">Subscribe</button>
+          </form>
+          <p data-i18n="newsletterNote">By subscribing, you agree to our Privacy Policy and consent to receive updates from our company.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p>&copy; 2025 EGYTOPIA Egyptian Heritage. <span data-i18n="allRights">All rights reserved.</span></p>
+    </div>
+  </footer>
+  
+  <!-- JavaScript Files -->
+  <script src="shared.js"></script>
+  <script src="ourStory.js"></script>
+</body>
+
+</html>
