@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Portal - Egytopia</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <link rel="stylesheet" href="artisan.css">
+</head>
+<body>
+<!-- Navigation Bar -->
+<header class="header">
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <a href="EgyHome.html" class="logo">EGY<span>TOPIA</span></a>
+            </div>
+            
+            <!-- Language Toggle Button -->
+            <div class="language-switcher">
+                <button class="lang-btn" id="langToggle">
+                    <span class="lang-text" data-i18n="arabic">العربية</span>
+                    <i class="fas fa-globe"></i>
+                </button>
+            </div>
+            
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="EgyHome.html" class="nav-link" data-i18n="home">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a href="collection.html" class="nav-link" data-i18n="collections">Collections</a>
+                </li>
+                <li class="nav-item">
+                    <a href="categories.html" class="nav-link" data-i18n="categories">Categories</a>
+                </li>
+                <li class="nav-item">
+                    <a href="user-portal.html" class="nav-link active" data-i18n="userPortal">User Portal</a>
+                </li>
+                <li class="nav-item">
+                    <a href="ourStory.html" class="nav-link" data-i18n="ourStory">Our Story</a>
+                </li>
+                <li class="nav-item">
+                    <a href="contact.html" class="nav-link" data-i18n="contact">Contact</a>
+                </li>
+                <!-- Logged in user display -->
+                <li class="nav-item" id="userNavItem" style="display: none;">
+                    <div class="user-nav">
+                        <div class="user-avatar">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div class="user-info">
+                            <span class="user-name" id="navUserName"></span>
+                            <span class="user-type" id="navUserType"></span>
+                        </div>
+                        <button class="logout-btn" id="navLogoutBtn">
+                            <i class="fas fa-sign-out-alt"></i>
+                        </button>
+                    </div>
+                </li>
+            </ul>
+            
+            <button class="nav-toggle" aria-label="Toggle navigation">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </button>
+        </div>
+    </nav>
+</header>
+
+<!-- Customer Dashboard Section (shown when customer is logged in) -->
+<section class="customer-dashboard" id="customerDashboard" style="display: none;">
+    <div class="dashboard-container">
+        <div class="dashboard-header">
+            <h1 class="dashboard-title" data-i18n="welcomeBack">Welcome Back!</h1>
+            <p class="dashboard-subtitle" data-i18n="enjoyShopping">Enjoy shopping authentic Egyptian crafts</p>
+        </div>
+        
+        <div class="dashboard-content">
+            <div class="dashboard-sidebar">
+                <div class="user-info-card">
+                    <div class="user-avatar-large">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <h2 class="user-name-large" id="customerName">Customer Name</h2>
+                    <p class="user-email" id="customerEmail">customer@example.com</p>
+                    <p class="user-type-badge customer-badge">
+                        <i class="fas fa-shopping-bag"></i> <span data-i18n="customer">Customer</span>
+                    </p>
+                </div>
+                
+                <div class="dashboard-stats">
+                    <div class="stat-item">
+                        <div class="stat-icon">
+                            <i class="fas fa-heart"></i>
+                        </div>
+                        <div>
+                            <div class="stat-number" id="wishlistCount">0</div>
+                            <div class="stat-label" data-i18n="wishlistItems">Wishlist Items</div>
+                        </div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-icon">
+                            <i class="fas fa-shopping-cart"></i>
+                        </div>
+                        <div>
+                            <div class="stat-number" id="cartCount">0</div>
+                            <div class="stat-label" data-i18n="cartItems">Cart Items</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="dashboard-actions">
+                    <a href="EgyHome.html" class="btn btn-primary">
+                        <i class="fas fa-home"></i> <span data-i18n="goToHome">Go to Home</span>
+                    </a>
+                    <a href="categories.html" class="btn btn-secondary">
+                        <i class="fas fa-shopping-bag"></i> <span data-i18n="shopNow">Shop Now</span>
+                    </a>
+                    <button class="btn btn-logout" id="customerLogoutBtn">
+                        <i class="fas fa-sign-out-alt"></i> <span data-i18n="signOut">Sign Out</span>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="dashboard-main">
+                <div class="dashboard-section">
+                    <h2 class="section-title" data-i18n="quickActions">Quick Actions</h2>
+                    <div class="quick-actions">
+                        <a href="categories.html" class="quick-action">
+                            <div class="action-icon">
+                                <i class="fas fa-gem"></i>
+                            </div>
+                            <div class="action-content">
+                                <h3 data-i18n="browseCollections">Browse Collections</h3>
+                                <p data-i18n="discoverUnique">Discover unique Egyptian crafts</p>
+                            </div>
+                        </a>
+                        
+                        <a href="wishlist.html" class="quick-action" id="viewWishlist">
+                            <div class="action-icon">
+                                <i class="fas fa-heart"></i>
+                            </div>
+                            <div class="action-content">
+                                <h3 data-i18n="myWishlist">My Wishlist</h3>
+                                <p data-i18n="viewSaved">View your saved items</p>
+                            </div>
+                        </a>
+                        
+                        <a href="cart.html" class="quick-action" id="viewCart">
+                            <div class="action-icon">
+                                <i class="fas fa-shopping-cart"></i>
+                            </div>
+                            <div class="action-content">
+                                <h3 data-i18n="myCart">My Cart</h3>
+                                <p data-i18n="reviewCart">Review your shopping cart</p>
+                            </div>
+                        </a>
+                        
+                        <a href="user-portal.html" class="quick-action" id="switchToArtisan">
+                            <div class="action-icon">
+                                <i class="fas fa-paint-brush"></i>
+                            </div>
+                            <div class="action-content">
+                                <h3 data-i18n="becomeArtisan">Become an Artisan</h3>
+                                <p data-i18n="startSelling">Start selling your crafts</p>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="dashboard-section">
+                    <h2 class="section-title" data-i18n="recommendedForYou">Recommended for You</h2>
+                    <div class="recommended-products">
+                        <!-- Recommended products will be added here -->
+                        <div class="no-recommendations">
+                            <i class="fas fa-search" style="font-size: 48px; margin-bottom: 20px; opacity: 0.5;"></i>
+                            <h3 data-i18n="startExploring">Start Exploring</h3>
+                            <p data-i18n="browseCollectionsDesc">Browse our collections to see personalized recommendations</p>
+                            <a href="categories.html" class="btn btn-primary" style="margin-top: 20px;" data-i18n="exploreProducts">
+                                Explore Products
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Auth Section (shown when not logged in) -->
+<section class="auth-section" id="authSection">
+    <div class="auth-container">
+        <div class="auth-content">
+            <h1 class="auth-title" data-i18n="joinCommunity">Join Egytopia Community</h1>
+            <p class="auth-subtitle" data-i18n="authSubtitle">Discover authentic Egyptian crafts or share your own creations. Choose your path below.</p>
+            
+            <!-- User Type Selection -->
+            <div class="user-type-selector" id="userTypeSelector">
+                <h2 class="selector-title" data-i18n="iWantTo">I want to:</h2>
+                <div class="type-options">
+                    <div class="type-option" data-type="customer">
+                        <div class="type-icon">
+                            <i class="fas fa-shopping-bag"></i>
+                        </div>
+                        <div class="type-content">
+                            <h3 data-i18n="shopAsCustomer">Shop as Customer</h3>
+                            <p data-i18n="shopDescription">Browse and purchase authentic Egyptian crafts</p>
+                        </div>
+                        <div class="type-check">
+                            <i class="fas fa-check"></i>
+                        </div>
+                    </div>
+                    
+                    <div class="type-option" data-type="artisan">
+                        <div class="type-icon">
+                            <i class="fas fa-paint-brush"></i>
+                        </div>
+                        <div class="type-content">
+                            <h3 data-i18n="sellAsArtisan">Sell as Artisan</h3>
+                            <p data-i18n="artisanDescription">Showcase and sell your handmade Egyptian crafts</p>
+                        </div>
+                        <div class="type-check">
+                            <i class="fas fa-check"></i>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="type-continue">
+                    <button class="btn btn-primary" id="continueBtn" disabled data-i18n="continue">Continue</button>
+                </div>
+            </div>
+            
+            <div class="auth-features" id="customerFeatures" style="display: none;">
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <i class="fas fa-gem"></i>
+                    </div>
+                    <div>
+                        <h3 data-i18n="authenticProducts">Authentic Products</h3>
+                        <p data-i18n="authenticDesc">Discover genuine Egyptian handmade crafts</p>
+                    </div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <i class="fas fa-shipping-fast"></i>
+                    </div>
+                    <div>
+                        <h3 data-i18n="easyShopping">Easy Shopping</h3>
+                        <p data-i18n="shoppingDesc">Seamless browsing and secure checkout</p>
+                    </div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <i class="fas fa-heart"></i>
+                    </div>
+                    <div>
+                        <h3 data-i18n="supportArtisans">Support Artisans</h3>
+                        <p data-i18n="supportDesc">Directly support Egyptian craftspeople</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="auth-features" id="artisanFeatures" style="display: none;">
+                <div class="feature-item" id="showcaseFeature">
+                    <div class="feature-icon">
+                        <i class="fas fa-store"></i>
+                    </div>
+                    <div>
+                        <h3 data-i18n="showcaseProducts">Showcase Your Products</h3>
+                        <p data-i18n="showcaseDesc">Display your crafts to a global audience</p>
+                    </div>
+                </div>
+                <div class="feature-item" id="earnFeature">
+                    <div class="feature-icon">
+                        <i class="fas fa-hand-holding-usd"></i>
+                    </div>
+                    <div>
+                        <h3 data-i18n="earnFromCraft">Earn From Your Craft</h3>
+                        <p data-i18n="earnDesc">Get fair compensation for your work</p>
+                    </div>
+                </div>
+                <div class="feature-item" id="communityFeature">
+                    <div class="feature-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div>
+                        <h3 data-i18n="joinCommunity">Join a Community</h3>
+                        <p data-i18n="communityDesc">Connect with fellow Egyptian artisans</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="auth-form-container" id="authFormContainer" style="display: none;">
+            <h2 class="form-title" id="formTitle">Welcome Back</h2>
+            <p class="form-subtitle" id="formSubtitle">Sign in to your account</p>
+            
+            <div class="auth-tabs">
+                <div class="auth-tab active" data-tab="signin" data-i18n="signIn">Sign In</div>
+                <div class="auth-tab" data-tab="signup" data-i18n="signUp">Sign Up</div>
+            </div>
+            
+            <form class="auth-form active" id="signinForm">
+                <div class="form-group">
+                    <label for="signinEmail" data-i18n="emailAddress">Email Address</label>
+                    <input type="email" id="signinEmail" class="form-control" placeholder="Enter your email" data-i18n-placeholder="enterEmail" required>
+                </div>
+                <div class="form-group">
+                    <label for="signinPassword" data-i18n="password">Password</label>
+                    <input type="password" id="signinPassword" class="form-control" placeholder="Enter your password" data-i18n-placeholder="enterPassword" required>
+                </div>
+                <button type="submit" class="btn btn-primary" data-i18n="signInBtn">Sign In</button>
+                <div class="switch-auth">
+                    <span data-i18n="dontHaveAccount">Don't have an account?</span> <a id="switchToSignup" data-i18n="signUpHere">Sign up here</a>
+                </div>
+            </form>
+            
+            <form class="auth-form" id="signupForm">
+                <div class="form-group">
+                    <label for="signupName" data-i18n="fullName">Full Name</label>
+                    <input type="text" id="signupName" class="form-control" placeholder="Enter your full name (letters and spaces only)" data-i18n-placeholder="enterFullName" required>
+                    <div class="validation-message" id="nameValidation"></div>
+                </div>
+                <div class="form-group">
+                    <label for="signupEmail" data-i18n="emailAddress">Email Address</label>
+                    <input type="email" id="signupEmail" class="form-control" placeholder="Enter your email" data-i18n-placeholder="enterEmail" required>
+                    <div class="validation-message" id="emailValidation"></div>
+                </div>
+                <div class="form-group">
+                    <label for="signupPassword" data-i18n="password">Password</label>
+                    <input type="password" id="signupPassword" class="form-control" placeholder="Create a secure password" data-i18n-placeholder="createPassword" required>
+                    <div class="validation-message" id="passwordValidation"></div>
+                    
+                    <div class="password-requirements">
+                        <div class="requirement" id="lengthReq">
+                            <i class="fas fa-circle"></i>
+                            <span data-i18n="lengthReq">At least 8 characters</span>
+                        </div>
+                        <div class="requirement" id="letterReq">
+                            <i class="fas fa-circle"></i>
+                            <span data-i18n="letterReq">Contains letters</span>
+                        </div>
+                        <div class="requirement" id="numberReq">
+                            <i class="fas fa-circle"></i>
+                            <span data-i18n="numberReq">Contains numbers</span>
+                        </div>
+                        <div class="requirement" id="specialReq">
+                            <i class="fas fa-circle"></i>
+                            <span data-i18n="specialReq">Contains special character (@$!%*#?&)</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="signupConfirmPassword" data-i18n="confirmPassword">Confirm Password</label>
+                    <input type="password" id="signupConfirmPassword" class="form-control" placeholder="Confirm your password" data-i18n-placeholder="confirmYourPassword" required>
+                    <div class="validation-message" id="confirmPasswordValidation"></div>
+                </div>
+                <!-- Hidden input for user type -->
+                <input type="hidden" id="userType" name="userType" value="">
+                <button type="submit" class="btn btn-primary" data-i18n="createAccount">Create Account</button>
+                <div class="switch-auth">
+                    <span data-i18n="alreadyHaveAccount">Already have an account?</span> <a id="switchToSignin" data-i18n="signInHere">Sign in here</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+
+<!-- Profile Section (shown when artisan is logged in) -->
+<section class="profile-section" id="profileSection" style="display: none;">
+    <div class="profile-container">
+        <div class="profile-header">
+            <h1 class="profile-title" data-i18n="artisanDashboard">Artisan Dashboard</h1>
+            <p class="profile-subtitle" data-i18n="manageProducts">Manage your products and profile</p>
+        </div>
+        
+        <div class="profile-content">
+            <div class="profile-sidebar">
+                <div class="profile-info">
+                    <div class="profile-avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <h2 class="profile-name" id="profileName">Artisan Name</h2>
+                    <p class="profile-email" id="profileEmail">artisan@example.com</p>
+                    <p class="user-type-badge artisan-badge">
+                        <i class="fas fa-paint-brush"></i> <span data-i18n="artisan">Artisan</span>
+                    </p>
+                </div>
+                
+                <div class="profile-stats">
+                    <div class="stat-item">
+                        <div class="stat-number" id="productsCount">0</div>
+                        <div class="stat-label" data-i18n="products">Products</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">0</div>
+                        <div class="stat-label" data-i18n="sales">Sales</div>
+                    </div>
+                </div>
+                
+                <div class="profile-actions">
+                    <button class="btn btn-primary" id="addProductBtn" data-i18n="addNewProduct">Add New Product</button>
+                    <button class="btn btn-secondary" id="artisanLogoutBtn" data-i18n="signOut">Sign Out</button>
+                </div>
+            </div>
+            
+            <div class="profile-main">
+                <h2 class="section-title" data-i18n="myProducts">My Products</h2>
+                
+                <div class="products-grid" id="artisanProducts">
+                    <!-- Products will be dynamically added here -->
+                </div>
+                
+                <div id="noProductsMessage" style="text-align: center; padding: 40px; color: #666;">
+                    <i class="fas fa-box-open" style="font-size: 48px; margin-bottom: 20px; opacity: 0.5;"></i>
+                    <h3 data-i18n="noProducts">No Products Yet</h3>
+                    <p data-i18n="startByAdding">Start by adding your first product to showcase your craft.</p>
+                    <button class="btn btn-primary" id="addFirstProductBtn" style="margin-top: 20px;">
+                        <i class="fas fa-plus"></i> <span data-i18n="addFirstProduct">Add Your First Product</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Add/Edit Product Modal -->
+<div class="modal-overlay" id="productModal">
+    <div class="modal">
+        <button class="close-modal" id="closeProductModal">&times;</button>
+        <div class="modal-header">
+            <h2 class="modal-title" id="modalTitle">Add New Product</h2>
+        </div>
+        <div class="modal-body">
+            <form id="productForm">
+                <div class="form-group">
+                    <label for="productImage" data-i18n="productImage">Product Image</label>
+                    <div class="image-upload">
+                        <div class="image-preview" id="imagePreview">
+                            <div class="image-placeholder">
+                                <i class="fas fa-image" style="font-size: 48px; margin-bottom: 10px;"></i>
+                                <p data-i18n="noImageSelected">No image selected</p>
+                            </div>
+                        </div>
+                        <input type="file" id="productImage" accept="image/*" style="display: none;">
+                        <button type="button" class="image-upload-btn" id="uploadImageBtn" data-i18n="chooseImage">Choose Image</button>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="productName" data-i18n="productName">Product Name</label>
+                    <input type="text" id="productName" class="form-control" placeholder="Enter product name" data-i18n-placeholder="enterProductName" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="productPrice" data-i18n="priceEGP">Price (EGP)</label>
+                    <input type="number" id="productPrice" class="form-control" placeholder="Enter price in EGP" data-i18n-placeholder="enterPrice" min="0" step="0.01" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="productDescription" data-i18n="description">Description</label>
+                    <textarea id="productDescription" class="form-control" rows="4" placeholder="Enter product description" data-i18n-placeholder="enterDescription" required></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="productCategory" data-i18n="category">Category</label>
+                    <select id="productCategory" class="form-control" required>
+                        <option value="" data-i18n="selectCategory">Select a category</option>
+                        <option value="jewelry" data-i18n="jewelry">Jewelry</option>
+                        <option value="art" data-i18n="art">Art</option>
+                        <option value="textiles" data-i18n="textiles">Textiles</option>
+                        <option value="sculptures" data-i18n="sculptures">Sculptures</option>
+                        <option value="home-decor" data-i18n="homeDecor">Home Decor</option>
+                        <option value="traditional-crafts" data-i18n="traditionalCrafts">Traditional Crafts</option>
+                        <option value="agricultural" data-i18n="agricultural">Agricultural Products</option>
+                        <option value="handmade" data-i18n="handmade">Handmade Goods</option>
+                    </select>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-secondary" id="cancelProductBtn" data-i18n="cancel">Cancel</button>
+            <button class="btn btn-primary" id="saveProductBtn" data-i18n="addProduct">Add Product</button>
+        </div>
+    </div>
+</div>
+
+<!-- Notification Container -->
+<div id="notificationContainer"></div>
+
+<footer class="footer-container">
+    <div class="footer-header">
+        <h1 data-i18n="footerTitle">EGYTOPIA</h1>
+        <h2 data-i18n="egyptianHeritage">Egyptian Heritage</h2>
+        <p data-i18n="footerTagline">Bringing the timeless beauty of Egyptian craftsmanship to the world.</p>
+    </div>
+    
+    <div class="hieroglyphic-border"></div>
+    
+    <div class="footer-content">
+        <div class="footer-section">
+            <h3 data-i18n="quickLinks">Quick Links</h3>
+            <div class="links-grid">
+                <div class="footer-links">
+                    <a href="EgyHome.html" data-i18n="home">Home</a>
+                    <a href="collection.html" data-i18n="products">Products</a>
+                    <a href="ourStory.html" data-i18n="aboutUs">About Us</a>
+                    <a href="blog.html" data-i18n="blog">Blog</a>
+                </div>
+                <div class="footer-links">
+                    <a href="shipping.html" data-i18n="shippingReturns">Shipping & Returns</a>
+                    <a href="faq.html" data-i18n="faq">FAQ</a>
+                    <a href="privacy.html" data-i18n="privacyPolicy">Privacy Policy</a>
+                    <a href="terms.html" data-i18n="termsConditions">Terms & Conditions</a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer-section">
+            <h3 data-i18n="customerService">Customer Service</h3>
+            <div class="contact-info">
+                <i class="fas fa-map-marker-alt"></i>
+                <div data-i18n="address">123 Nile Avenue, Cairo, Egypt</div>
+            </div>
+            <div class="contact-info">
+                <i class="fas fa-phone"></i>
+                <div data-i18n="phone">+20 123 456 7890</div>
+            </div>
+            <div class="contact-info">
+                <i class="fas fa-envelope"></i>
+                <div data-i18n="email">info@egytopia.eg</div>
+            </div>
+            
+            <div class="social-icons">
+                <a href="#"><i class="fab fa-facebook-f"></i></a>
+                <a href="#"><i class="fab fa-instagram"></i></a>
+                <a href="#"><i class="fab fa-pinterest"></i></a>
+                <a href="#"><i class="fab fa-twitter"></i></a>
+            </div>
+        </div>
+        
+        <div class="footer-section">
+            <h3 data-i18n="subscribeNewsletter">Subscribe to Our Newsletter</h3>
+            <div class="newsletter">
+                <p data-i18n="newsletterDesc">Get exclusive offers and updates on new products</p>
+                <form class="newsletter-form">
+                    <input type="email" placeholder="Enter your email" data-i18n-placeholder="emailPlaceholder" required>
+                    <button type="submit" data-i18n="subscribe">Subscribe</button>
+                </form>
+                <p data-i18n="newsletterNote">By subscribing, you agree to our Privacy Policy and consent to receive updates from our company.</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="footer-bottom">
+        <p data-i18n="copyright">&copy; 2025 EGYTOPIA Egyptian Heritage. All rights reserved.</p>
+    </div>
+</footer>
+<script src="/artisan.js"></script>
+
+</body>
+</html>
